@@ -18,6 +18,7 @@ public class Main {
             while (cursor.hasNext()) {
                 Document document = cursor.next();
                 System.out.println(document.toJson());
+                System.out.println();
             }
         }
     }
