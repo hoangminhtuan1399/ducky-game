@@ -4,6 +4,7 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -12,6 +13,8 @@ public class Window {
     private int width, height;
     private String title;
     private long glfwWindow;
+    private float r, g, b, a;
+    private boolean fadeToBlack = false;
     private static Window window = null;
 
     private Window() {
@@ -19,6 +22,10 @@ public class Window {
         this.width = 1920;
         this.height = 1080;
         this.title = "duck";
+        r = 1;
+        b = 0;
+        g = 0;
+        a = 0;
     }
 
     public static Window get() {
@@ -36,6 +43,12 @@ public class Window {
         // Gọi phương thức khởi tạo và vòng lặp chính của ứng dụng
         init();
         loop();
+
+        // Giải phóng bộ nhớ và đóng cửa sổ GLFW khi ứng dụng kết thúc
+        glfwFreeCallbacks(glfwWindow);
+        glfwDestroyWindow(glfwWindow);
+        glfwTerminate();
+        glfwSetErrorCallback(null).free();
     }
 
     public void init() {
@@ -61,14 +74,24 @@ public class Window {
             throw new IllegalStateException("Failed to create the GLFW window");
         }
 
+        // Đặt callback cho sự kiện di chuyển chuột, nhấn nút chuột, và cuộn chuột
+        glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback);
+        glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
+        glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
+
+        // Đặt callback cho sự kiện nhấn phím
+        glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
+
         // Đặt cửa sổ GLFW vừa tạo làm ngữ cảnh hiện tại
         glfwMakeContextCurrent(glfwWindow);
 
-        // v-sync
+        // V-sync: đồng bộ hóa với tần số làm mới của màn hình
         glfwSwapInterval(1);
 
-        // làm cho cửa sổ hiển thị
+        // Làm cho cửa sổ hiển thị
         glfwShowWindow(glfwWindow);
+
+        // Kích hoạt các khả năng của OpenGL trong ngữ cảnh hiện tại
         GL.createCapabilities();
     }
 
@@ -77,10 +100,25 @@ public class Window {
         while (!glfwWindowShouldClose(glfwWindow)) {
             // Giao tiếp với cửa sổ GLFW: Đổi frame buffers và xử lý sự kiện
             glfwPollEvents();
-            glClearColor(1.0f / 6.0f, 3.0f / 6.0f, 6.0f / 6.0f, 1.0f / 6.0f);
-            glClear(GL_COLOR_BUFFER_BIT);
-            glfwSwapBuffers(glfwWindow);
 
+            // Xóa màn hình với màu được thiết lập (có thể fade màu nếu điều kiện được đáp ứng)
+            glClearColor(r, g, b, a);
+            glClear(GL_COLOR_BUFFER_BIT);
+
+            // Kiểm tra nếu nút SPACE được nhấn, thực hiện hiệu ứng fade to black
+            if (KeyListener.isKeyPressed(GLFW_KEY_SPACE)) {
+                fadeToBlack = true;
+            }
+
+            // Nếu đang thực hiện fade to black, giảm dần các giá trị màu
+            if (fadeToBlack) {
+                r = Math.max(r - 0.01f, 0);
+                g = Math.max(g - 0.01f, 0);
+                b = Math.max(b - 0.01f, 0);
+            }
+
+            // Hoán đổi các buffers để hiển thị hình ảnh đã được vẽ
+            glfwSwapBuffers(glfwWindow);
         }
     }
 }
