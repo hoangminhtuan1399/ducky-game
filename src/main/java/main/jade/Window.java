@@ -1,5 +1,6 @@
 package main.jade;
 
+import main.util.Time;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -13,9 +14,11 @@ public class Window {
     private int width, height;
     private String title;
     private long glfwWindow;
-    private float r, g, b, a;
+    public float r, g, b, a;
     private boolean fadeToBlack = false;
     private static Window window = null;
+
+    private static Scene currentScene;
 
     private Window() {
         // Thiết lập giá trị mặc định cho chiều rộng, chiều cao, và tiêu đề cửa sổ
@@ -28,6 +31,22 @@ public class Window {
         a = 0;
     }
 
+
+    public  static void changeScene(int newScene){
+        switch (newScene){
+            case 0:
+                currentScene =new LevelEditorScene();
+                currentScene.init();
+                break;
+            case 1:
+                currentScene =new LevelScene();
+                currentScene.init();
+                break;
+            default:
+                assert false:"unknown scene"+newScene +"'";
+                break;
+        }
+    }
     public static Window get() {
         // Triển khai mẫu Singleton để đảm bảo chỉ có một thể hiện của lớp Window
         if (Window.window == null) {
@@ -93,9 +112,15 @@ public class Window {
 
         // Kích hoạt các khả năng của OpenGL trong ngữ cảnh hiện tại
         GL.createCapabilities();
+        Window.changeScene(0);
     }
 
     public void loop() {
+
+        float beginTime = Time.getTime();
+        float endTime =Time.getTime();
+        float dt =-1.0f;
+
         // Vòng lặp chính của ứng dụng, kiểm tra điều kiện đóng cửa sổ
         while (!glfwWindowShouldClose(glfwWindow)) {
             // Giao tiếp với cửa sổ GLFW: Đổi frame buffers và xử lý sự kiện
@@ -105,20 +130,15 @@ public class Window {
             glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            // Kiểm tra nếu nút SPACE được nhấn, thực hiện hiệu ứng fade to black
-            if (KeyListener.isKeyPressed(GLFW_KEY_SPACE)) {
-                fadeToBlack = true;
-            }
-
-            // Nếu đang thực hiện fade to black, giảm dần các giá trị màu
-            if (fadeToBlack) {
-                r = Math.max(r - 0.01f, 0);
-                g = Math.max(g - 0.01f, 0);
-                b = Math.max(b - 0.01f, 0);
+            if(dt>=0) {
+                currentScene.update(dt);
             }
 
             // Hoán đổi các buffers để hiển thị hình ảnh đã được vẽ
             glfwSwapBuffers(glfwWindow);
+            endTime =Time.getTime();
+             dt=endTime-beginTime;
+            beginTime=endTime;
         }
     }
 }
