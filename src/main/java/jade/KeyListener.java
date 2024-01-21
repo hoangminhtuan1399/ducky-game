@@ -1,6 +1,7 @@
-package main.jade;
+package jade;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
 public class KeyListener {
     // Biến static để giữ một thể hiện duy nhất của lớp KeyListener theo mô hình Singleton

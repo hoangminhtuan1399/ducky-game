@@ -1,4 +1,4 @@
-package main.jade;
+package jade;
 
 public abstract class Scene {
     public Scene(){

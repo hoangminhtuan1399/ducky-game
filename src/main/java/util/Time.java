@@ -1,4 +1,4 @@
-package main.util;
+package util;
 
 public class Time {
     // Biến lưu trữ thời điểm bắt đầu đo thời gian

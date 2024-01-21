@@ -1,4 +1,6 @@
-package main.jade;
+package jade;
+
+import jade.Scene;
 
 import static org.lwjgl.opengl.GL20.*;
 
