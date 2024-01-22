@@ -1,6 +1,7 @@
 package jade;
 
 import jade.Scene;
+import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import renderer.Shader; // Import Shader class
 
@@ -45,10 +46,10 @@ public class LevelEditorScene extends Scene {
 
     // Mảng chứa thông tin về đỉnh của hình vuông
     private float[] vertexArray = {
-            0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-            -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-            0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-            -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f
+            100.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+            0.5f, 100.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+            100.5f, 100.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+            0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f
     };
 
     // Mảng chỉ số của các đỉnh để tạo hình vuông
@@ -77,6 +78,7 @@ public class LevelEditorScene extends Scene {
     // Phương thức để khởi tạo shaders và shader program
     @Override
     public void init() {
+        this.camera=new Camera(new Vector2f());
         // Tạo Shader object và biên dịch shader
         defaultShader = new Shader("assets/shaders/default.glsl");
         defaultShader.compile();
@@ -116,8 +118,11 @@ public class LevelEditorScene extends Scene {
 
     @Override
     public void update(float dt) {
+        camera.position.x -=dt*50f;
         // Sử dụng shader program và VAO đã tạo
         defaultShader.use();
+        defaultShader.uploadMat4f("uProjection",camera.getProjectionMatrix());
+        defaultShader.uploadMat4f("uView",camera.getViewMatrix());
         glBindVertexArray(vaoID);
 
         // Bật thuộc tính position và color
