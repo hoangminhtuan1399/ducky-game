@@ -3,7 +3,7 @@ package jade;
 import jade.Scene;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
-import renderer.Shader; // Import Shader class
+import renderer.Shader; // Import class Shader
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -13,7 +13,7 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class LevelEditorScene extends Scene {
 
-    // Đoạn mã nguồn của vertex shader
+    // Mã nguồn cho vertex shader
     private String vertexShaderSrc = "#version 330 core\n" +
             "layout (location=0) in vec3 aPos;\n" +
             "layout (location=1) in vec4 aColor;\n" +
@@ -26,7 +26,7 @@ public class LevelEditorScene extends Scene {
             "    gl_Position = vec4(aPos, 1.0);\n" +
             "}\n";
 
-    // Đoạn mã nguồn của fragment shader
+    // Mã nguồn cho fragment shader
     private String fragmentShaderSrc = "#version 330 core\n" +
             "\n" +
             "in vec4 fColor;\n" +
@@ -78,7 +78,7 @@ public class LevelEditorScene extends Scene {
     // Phương thức để khởi tạo shaders và shader program
     @Override
     public void init() {
-        this.camera=new Camera(new Vector2f());
+        this.camera = new Camera(new Vector2f());
         // Tạo Shader object và biên dịch shader
         defaultShader = new Shader("assets/shaders/default.glsl");
         defaultShader.compile();
@@ -118,11 +118,11 @@ public class LevelEditorScene extends Scene {
 
     @Override
     public void update(float dt) {
-        camera.position.x -=dt*50f;
+        camera.position.x -= dt * 50f;
         // Sử dụng shader program và VAO đã tạo
         defaultShader.use();
-        defaultShader.uploadMat4f("uProjection",camera.getProjectionMatrix());
-        defaultShader.uploadMat4f("uView",camera.getViewMatrix());
+        defaultShader.uploadMat4f("uProjection", camera.getProjectionMatrix());
+        defaultShader.uploadMat4f("uView", camera.getViewMatrix());
         glBindVertexArray(vaoID);
 
         // Bật thuộc tính position và color
