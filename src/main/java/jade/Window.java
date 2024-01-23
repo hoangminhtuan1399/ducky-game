@@ -24,9 +24,9 @@ public class Window {
         this.height = 1080;
         this.title = "duck";
         r = 1;
-        b = 0;
-        g = 0;
-        a = 0;
+        b = 1;
+        g = 1;
+        a = 1;
     }
 
 
@@ -117,7 +117,7 @@ public class Window {
 
         float beginTime = Time.getTime();
         float endTime =Time.getTime();
-        float dt =-1.0f;
+        float speed =-1.0f;
 
         // Vòng lặp chính của ứng dụng, kiểm tra điều kiện đóng cửa sổ
         while (!glfwWindowShouldClose(glfwWindow)) {
@@ -128,14 +128,14 @@ public class Window {
             glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            if(dt>=0) {
-                currentScene.update(dt);
+            if(speed>=0) {
+                currentScene.update(speed);
             }
 
             // Hoán đổi các buffers để hiển thị hình ảnh đã được vẽ
             glfwSwapBuffers(glfwWindow);
             endTime =Time.getTime();
-             dt=endTime-beginTime;
+            speed=endTime-beginTime;
             beginTime=endTime;
         }
     }
