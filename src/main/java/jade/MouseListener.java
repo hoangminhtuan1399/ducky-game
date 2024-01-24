@@ -4,22 +4,12 @@ import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
 public class MouseListener {
-    // Biến static để giữ một thể hiện duy nhất của lớp MouseListener theo mô hình Singleton
     private static MouseListener instance;
-
-    // Biến lưu trữ giá trị cuộn chuột theo chiều ngang và chiều dọc
     private double scrollX, scrollY;
-
-    // Biến lưu trữ tọa độ x và y hiện tại của chuột, cũng như tọa độ x và y của chuột trong frame trước đó
-    private double xPos, yPos, lastY, lastX;
-
-    // Mảng lưu trữ trạng thái nhấn của các nút chuột (trái, phải, giữa)
+    private double xPos, yPos, lastX, lastY;
     private boolean mouseButtonPressed[] = new boolean[3];
-
-    // Biến kiểm tra xem chuột có đang được kéo không
     private boolean isDragging;
 
-    // Constructor riêng tư để đảm bảo không thể tạo ra thể hiện mới từ bên ngoài lớp
     private MouseListener() {
         this.scrollX = 0.0;
         this.scrollY = 0.0;
@@ -29,7 +19,6 @@ public class MouseListener {
         this.lastY = 0.0;
     }
 
-    // Phương thức static để lấy thể hiện duy nhất của lớp MouseListener theo mô hình Singleton
     public static MouseListener get() {
         if (MouseListener.instance == null) {
             MouseListener.instance = new MouseListener();
@@ -37,29 +26,20 @@ public class MouseListener {
         return MouseListener.instance;
     }
 
-    // Callback khi di chuyển chuột
-    public static void mousePosCallback(long window, double xpos, double ypos) {
-        // Lưu trữ tọa độ chuột trước đó
+    public static void mousePosCallback(long window, double xPos, double yPos) {
         get().lastX = get().xPos;
         get().lastY = get().yPos;
-
-        // Cập nhật tọa độ chuột hiện tại
-        get().xPos = xpos;
-        get().yPos = ypos;
-
-        // Kiểm tra xem chuột có đang được kéo không
+        get().xPos = xPos;
+        get().yPos = yPos;
         get().isDragging = get().mouseButtonPressed[0] || get().mouseButtonPressed[1] || get().mouseButtonPressed[2];
     }
 
-    // Callback khi nhấn hoặc nhả nút chuột
-    public static void mouseButtonCallback(long window, int button, int action, int mods) {
+    public static void mouseButtonCallback(long window, int button, int action, int mod) {
         if (action == GLFW_PRESS) {
-            // Kiểm tra và cập nhật trạng thái nút chuột được nhấn
             if (button < get().mouseButtonPressed.length) {
                 get().mouseButtonPressed[button] = true;
             }
         } else if (action == GLFW_RELEASE) {
-            // Kiểm tra và cập nhật trạng thái nút chuột được nhả
             if (button < get().mouseButtonPressed.length) {
                 get().mouseButtonPressed[button] = false;
                 get().isDragging = false;
@@ -67,14 +47,11 @@ public class MouseListener {
         }
     }
 
-    // Callback khi cuộn chuột
-    public static void mouseScrollCallback(long window, double xOffset, double yOffset) {
-        // Cập nhật giá trị cuộn chuột theo chiều ngang và chiều dọc
+    public static void mouseScrollCallBack(long window, double xOffset, double yOffset) {
         get().scrollX = xOffset;
         get().scrollY = yOffset;
     }
 
-    // Phương thức kết thúc frame, cập nhật lại giá trị scroll và tọa độ chuột
     public static void endFrame() {
         get().scrollX = 0;
         get().scrollY = 0;
@@ -82,7 +59,6 @@ public class MouseListener {
         get().lastY = get().yPos;
     }
 
-    // Các phương thức getter để lấy thông tin về tọa độ, cuộn, và trạng thái chuột
     public static float getX() {
         return (float) get().xPos;
     }
@@ -111,7 +87,6 @@ public class MouseListener {
         return get().isDragging;
     }
 
-    // Kiểm tra trạng thái nhấn của nút chuột
     public static boolean mouseButtonDown(int button) {
         if (button < get().mouseButtonPressed.length) {
             return get().mouseButtonPressed[button];
