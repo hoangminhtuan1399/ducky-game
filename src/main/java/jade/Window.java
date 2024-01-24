@@ -20,8 +20,8 @@ public class Window {
     private static Window window = null;
     private static Scene currentScene;
     private Window() {
-        this.width = 1920;
-        this.height = 1080;
+        this.width = 920;
+        this.height = 700;
         this.title = "Ducky";
         r = 1;
         g = 1;
