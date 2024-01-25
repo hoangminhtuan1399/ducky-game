@@ -66,17 +66,21 @@ public class Window {
     }
 
     private void init() {
+        // Setup an error callback
         GLFWErrorCallback.createPrint(System.err).set();
 
+        // Initialize GLFW
         if (!glfwInit()) {
             throw new IllegalStateException("Unable to init GLFW");
         }
 
+        // Configure GLFW
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
+        // Create the window
         glfwWindow = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
         if (glfwWindow == NULL) {
             throw new IllegalStateException("Failed to create glfw window");
@@ -88,11 +92,19 @@ public class Window {
 
         glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
 
+        // Make the OpenGL context current
         glfwMakeContextCurrent(glfwWindow);
+        // Enable v-sync
         glfwSwapInterval(1);
 
+        // Make the window visible
         glfwShowWindow(glfwWindow);
 
+        // This line is critical for LWJGL's interoperation with GLFW's
+        // OpenGL context, or any context that is managed externally.
+        // LWJGL detects the context that is current in the current thread,
+        // creates the GLCapabilities instance and makes the OpenGL
+        // bindings available for use.
         GL.createCapabilities();
 
         Window.changeScene(0);
