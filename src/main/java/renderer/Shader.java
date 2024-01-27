@@ -115,7 +115,7 @@ public class Shader {
     }
 
     public  void use () {
-        if (beingUsed) {
+        if (!beingUsed) {
             // Bind shader program
             glUseProgram(shaderProgramID);
             beingUsed = true;
@@ -161,7 +161,7 @@ public class Shader {
         glUniform2f(varLocation, vec.x, vec.y);
     }
 
-    public void uplooadFloat(String varName, float val){
+    public void uploadFloat(String varName, float val){
         int varLocation = glGetUniformLocation(shaderProgramID, varName);
         use();
         glUniform1f(varLocation, val);
