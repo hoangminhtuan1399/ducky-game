@@ -143,22 +143,22 @@ public class Shader {
         glUniformMatrix3fv(varLocation, false, matBuffer);
     }
 
-    public void uploadVec4f(String varName, Vector4f vector4f){
+    public void uploadVec4f(String varName, Vector4f vec){
         int varLocation = glGetUniformLocation(shaderProgramID, varName);
         use();
-        glUniform4f(varLocation, vector4f.x, vector4f.y, vector4f.z, vector4f.w );
+        glUniform4f(varLocation, vec.x, vec.y, vec.z, vec.w );
     }
 
-    public void uploadVec3f(String varName, Vector3f vector3f){
+    public void uploadVec3f(String varName, Vector3f vec){
         int varLocation = glGetUniformLocation(shaderProgramID, varName);
         use();
-        glUniform3f(varLocation, vector3f.x, vector3f.y, vector3f.z);
+        glUniform3f(varLocation, vec.x, vec.y, vec.z);
     }
 
-    public void uploadVec2f(String varName, Vector2f vector2f){
+    public void uploadVec2f(String varName, Vector2f vec){
         int varLocation = glGetUniformLocation(shaderProgramID, varName);
         use();
-        glUniform2f(varLocation, vector2f.x, vector2f.y);
+        glUniform2f(varLocation, vec.x, vec.y);
     }
 
     public void uplooadFloat(String varName, float val){
