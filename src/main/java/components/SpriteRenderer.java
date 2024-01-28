@@ -5,9 +5,10 @@ import org.joml.Vector4f;
 
 public class SpriteRenderer extends Component {
 
-    Vector4f color;
+    private Vector4f color;
 
     public SpriteRenderer(Vector4f color) {
+
         this.color = color;
     }
 

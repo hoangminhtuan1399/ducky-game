@@ -4,10 +4,11 @@ import components.SpriteRenderer;
 import jade.Window;
 import org.joml.Vector4f;
 
-import static org.lwjgl.opengl.ARBVertexArrayObject.glBindVertexArray;
-import static org.lwjgl.opengl.ARBVertexArrayObject.glGenVertexArrays;
-import static org.lwjgl.opengl.GL15C.*;
-import static org.lwjgl.opengl.GL20C.*;
+
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class RenderBatch {
     // Vertex
@@ -18,7 +19,7 @@ public class RenderBatch {
     private final int COLOR_SIZE = 4;
 
     private final int POS_OFFSET = 0;
-    private final int COLOR_OFFSET = POS_OFFSET * Float.BYTES;
+    private final int COLOR_OFFSET = POS_OFFSET + POS_SIZE * Float.BYTES;
     private final int VERTEX_SIZE = 6;
     private final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
 
@@ -37,7 +38,7 @@ public class RenderBatch {
         this.sprites = new SpriteRenderer[maxBatchSize];
         this.maxBatchSize = maxBatchSize;
 
-        //4 vertices quads
+        // 4 vertices quads
         vertices = new float[maxBatchSize * 4 * VERTEX_SIZE];
 
         this.numSprites = 0;
@@ -84,7 +85,7 @@ public class RenderBatch {
     }
 
     public void render(){
-        // For now, we will rebuffer all data every fram
+        // For now, we will rebuffer all data every frame
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
 
@@ -114,7 +115,7 @@ public class RenderBatch {
 
         Vector4f color = sprite.getColor();
 
-        // Add vertice with the appropriate properties
+        // Add vertices with the appropriate properties
 
         // *      *
         // *      *
@@ -158,7 +159,7 @@ public class RenderBatch {
         int offsetArrayIndex = 6 * index;
         int offset = 4 * index;
 
-        // 3, 2, 0, 0, 2, 1          7, 6, 4, 6, 5
+        // 3, 2, 0, 0, 2, 1          7, 6, 4, 4, 6, 5
         // Triangle 1
         elements[offsetArrayIndex] = offset + 3;
         elements[offsetArrayIndex + 1] = offset + 2;
@@ -172,6 +173,7 @@ public class RenderBatch {
     }
 
     public boolean hasRoom(){
+
         return this.hasRoom;
     }
 
