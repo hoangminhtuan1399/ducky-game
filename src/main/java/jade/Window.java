@@ -22,7 +22,7 @@ public class Window {
     private Window() {
         this.width = 920;
         this.height = 700;
-        this.title = "Ducky";
+        this.title = "Duong ngu";
         r = 1;
         g = 1;
         b = 1;
