@@ -6,8 +6,7 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.stb.STBImage.stbi_image_free;
-import static org.lwjgl.stb.STBImage.stbi_load;
+import static org.lwjgl.stb.STBImage.*;
 
 public class Texture {
     private String filepath;
@@ -16,22 +15,23 @@ public class Texture {
     public Texture(String filepath) {
         this.filepath = filepath;
 
-        // Generate texture on GPU
+        // Tạo texture trên GPU
         texID = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texID);
 
-        // Set texture parameters
-        // Repeat image in both directions
+        // Thiết lập các tham số cho texture
+        // Lặp lại hình ảnh theo cả hai hướng
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        // When stretching the image, pixelate
+        // Khi kéo dãn hình ảnh, làm mờ pixel
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        // When shrinking an image, pixelate
+        // Khi co hình ảnh, làm mờ pixel
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
         IntBuffer width = BufferUtils.createIntBuffer(1);
         IntBuffer height = BufferUtils.createIntBuffer(1);
         IntBuffer channels = BufferUtils.createIntBuffer(1);
+        stbi_set_flip_vertically_on_load(true);
         ByteBuffer image = stbi_load(filepath, width, height, channels, 0);
 
         if (image != null) {
@@ -42,10 +42,10 @@ public class Texture {
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(0), height.get(0),
                         0, GL_RGBA, GL_UNSIGNED_BYTE, image);
             } else {
-                assert false : "Error: (Texture) Unknown number of channesl '" + channels.get(0) + "'";
+                assert false : "Lỗi: (Texture) Số lượng kênh không xác định '" + channels.get(0) + "'";
             }
         } else {
-            assert false : "Error: (Texture) Could not load image '" + filepath + "'";
+            assert false : "Lỗi: (Texture) Không thể tải ảnh '" + filepath + "'";
         }
 
         stbi_image_free(image);

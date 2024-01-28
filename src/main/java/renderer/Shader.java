@@ -3,7 +3,6 @@ package renderer;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
 
-import javax.print.DocFlavor;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.file.Files;
@@ -25,19 +24,22 @@ public class Shader {
     public Shader(String filepath) {
         this.filepath = filepath;
         try {
+            // Đọc nội dung từ tệp tin shader
             String source = new String(Files.readAllBytes(Paths.get(filepath)));
+            // Phân tách chuỗi dựa trên mẫu "#type 'pattern'"
             String[] splitString = source.split("(#type)( )+([a-zA-Z]+)");
 
-            // Find the first pattern after #type 'pattern'
+            // Tìm mẫu đầu tiên sau #type 'pattern'
             int index = source.indexOf("#type") + 6;
             int eol = source.indexOf("\r\n", index);
             String firstPattern = source.substring(index, eol).trim();
 
-            // Find the second pattern after #type 'pattern'
+            // Tìm mẫu thứ hai sau #type 'pattern'
             index = source.indexOf("#type", eol) + 6;
             eol = source.indexOf("\r\n", index);
             String secondPattern = source.substring(index, eol).trim();
 
+            // Xác định xem mẫu nào là vertex và mẫu nào là fragment
             if (firstPattern.equals("vertex")) {
                 vertexSource = splitString[1];
             } else if (firstPattern.equals("fragment")) {
@@ -61,17 +63,17 @@ public class Shader {
 
     public void compile() {
         // ============================================================
-        // Compile and link shaders
+        // Biên dịch và liên kết shader
         // ============================================================
         int vertexID, fragmentID;
 
-        // First load and compile the vertex shader
+        // Biên dịch shader vertex
         vertexID = glCreateShader(GL_VERTEX_SHADER);
-        // Pass the shader source to the GPU
+        // Truyền source của shader đến GPU
         glShaderSource(vertexID, vertexSource);
         glCompileShader(vertexID);
 
-        // Check for errors in compilation
+        // Kiểm tra lỗi trong quá trình biên dịch
         int success = glGetShaderi(vertexID, GL_COMPILE_STATUS);
         if (success == GL_FALSE) {
             int len = glGetShaderi(vertexID, GL_INFO_LOG_LENGTH);
@@ -80,13 +82,13 @@ public class Shader {
             assert false : "";
         }
 
-        // First load and compile the vertex shader
+        // Biên dịch shader fragment
         fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
-        // Pass the shader source to the GPU
+        // Truyền source của shader đến GPU
         glShaderSource(fragmentID, fragmentSource);
         glCompileShader(fragmentID);
 
-        // Check for errors in compilation
+        // Kiểm tra lỗi trong quá trình biên dịch
         success = glGetShaderi(fragmentID, GL_COMPILE_STATUS);
         if (success == GL_FALSE) {
             int len = glGetShaderi(fragmentID, GL_INFO_LOG_LENGTH);
@@ -95,13 +97,13 @@ public class Shader {
             assert false : "";
         }
 
-        // Link shaders and check for errors
+        // Liên kết shader và kiểm tra lỗi
         shaderProgramID = glCreateProgram();
         glAttachShader(shaderProgramID, vertexID);
         glAttachShader(shaderProgramID, fragmentID);
         glLinkProgram(shaderProgramID);
 
-        // Check for linking errors
+        // Kiểm tra lỗi trong quá trình liên kết
         success = glGetProgrami(shaderProgramID, GL_LINK_STATUS);
         if (success == GL_FALSE) {
             int len = glGetProgrami(shaderProgramID, GL_INFO_LOG_LENGTH);
@@ -113,13 +115,14 @@ public class Shader {
 
     public void use() {
         if (!beingUsed) {
-            // Bind shader program
+            // Kích hoạt chương trình shader
             glUseProgram(shaderProgramID);
             beingUsed = true;
         }
     }
 
     public void detach() {
+        // Hủy kích hoạt chương trình shader
         glUseProgram(0);
         beingUsed = false;
     }
@@ -174,5 +177,11 @@ public class Shader {
         int varLocation = glGetUniformLocation(shaderProgramID, varName);
         use();
         glUniform1i(varLocation, slot);
+    }
+
+    public void uploadIntArray(String varName, int[] array) {
+        int varLocation = glGetUniformLocation(shaderProgramID, varName);
+        use();
+        glUniform1iv(varLocation, array);
     }
 }
