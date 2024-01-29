@@ -3,23 +3,23 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.example</groupId>
-  <artifactId>Ducky</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <groupId>testiamgui</groupId>
+  <artifactId>testiamgui</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>Ducky</name>
+  <name>testiamgui</name>
   <url>http://maven.apache.org</url>
 
-  <properties>
-    <lwjgl.version>3.3.3</lwjgl.version>
-    <joml.version>1.10.5</joml.version>
-    <lwjgl.natives>natives-windows</lwjgl.natives>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>20</maven.compiler.source>
-    <maven.compiler.target>20</maven.compiler.target>
-  </properties>
 
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.target>12</maven.compiler.target>
+    <maven.compiler.source>12</maven.compiler.source>
+    <lwjgl.version>3.2.3</lwjgl.version>
+    <joml.version>1.9.24</joml.version>
+    <lwjgl.natives>natives-windows</lwjgl.natives>
+  </properties>
   <profiles>
     <profile>
       <id>lwjgl-natives-linux-amd64</id>
@@ -47,7 +47,6 @@
       </properties>
     </profile>
   </profiles>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -61,78 +60,94 @@
   </dependencyManagement>
 
   <dependencies>
+
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
+      <groupId>io.imgui.java</groupId>
+      <artifactId>binding</artifactId>
+      <version>1.76-0.9</version>
+    </dependency>
+    <dependency>
+      <groupId>io.imgui.java</groupId>
+      <artifactId>lwjgl3</artifactId>
+      <version>1.76-0.9</version>
+    </dependency>
+    <dependency>
+      <groupId>io.imgui.java</groupId>
+      <artifactId>natives-windows</artifactId>
+      <version>1.76-0.9</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.10.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-nfd</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-assimp</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-glfw</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-openal</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-opengl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-stb</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl</artifactId>
+      <classifier>${lwjgl.natives}</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-assimp</artifactId>
+      <classifier>${lwjgl.natives}</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-glfw</artifactId>
+      <classifier>${lwjgl.natives}</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-openal</artifactId>
+      <classifier>${lwjgl.natives}</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-opengl</artifactId>
+      <classifier>${lwjgl.natives}</classifier>
     </dependency>
     <dependency>
       <groupId>org.mongodb</groupId>
-      <artifactId>mongo-java-driver</artifactId>
+      <artifactId>mongodb-driver</artifactId>
       <version>3.12.14</version>
     </dependency>
     <dependency>
       <groupId>org.lwjgl</groupId>
-      <artifactId>lwjgl</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.lwjgl</groupId>
-      <artifactId>lwjgl-assimp</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.lwjgl</groupId>
-      <artifactId>lwjgl-glfw</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.lwjgl</groupId>
-      <artifactId>lwjgl-nfd</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.lwjgl</groupId>
-      <artifactId>lwjgl-openal</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.lwjgl</groupId>
-      <artifactId>lwjgl-opengl</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.lwjgl</groupId>
       <artifactId>lwjgl-stb</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.lwjgl</groupId>
-      <artifactId>lwjgl</artifactId>
-      <classifier>${lwjgl.natives}</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.lwjgl</groupId>
-      <artifactId>lwjgl-assimp</artifactId>
-      <classifier>${lwjgl.natives}</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.lwjgl</groupId>
-      <artifactId>lwjgl-glfw</artifactId>
       <classifier>${lwjgl.natives}</classifier>
     </dependency>
     <dependency>
       <groupId>org.lwjgl</groupId>
       <artifactId>lwjgl-nfd</artifactId>
-      <classifier>${lwjgl.natives}</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.lwjgl</groupId>
-      <artifactId>lwjgl-openal</artifactId>
-      <classifier>${lwjgl.natives}</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.lwjgl</groupId>
-      <artifactId>lwjgl-opengl</artifactId>
-      <classifier>${lwjgl.natives}</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.lwjgl</groupId>
-      <artifactId>lwjgl-stb</artifactId>
       <classifier>${lwjgl.natives}</classifier>
     </dependency>
     <dependency>
@@ -140,12 +155,14 @@
       <artifactId>joml</artifactId>
       <version>${joml.version}</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.mongodb/mongodb-driver -->
-    <dependency>
-      <groupId>org.mongodb</groupId>
-      <artifactId>mongodb-driver</artifactId>
-      <version>3.12.14</version>
-    </dependency>
-
   </dependencies>
+
+  <repositories>
+    <repository>
+      <id>central</id>
+      <name>bintray-plugins</name>
+      <url>https://jcenter.bintray.com</url>
+    </repository>
+
+  </repositories>
 </project>
