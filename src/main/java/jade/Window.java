@@ -3,6 +3,7 @@ package jade;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import renderer.DebugDraw;
 import scene.LevelEditorScene;
 import scene.LevelScene;
 import scene.Scene;
@@ -26,7 +27,7 @@ public class Window {
     private static Scene currentScene;
 
     private Window() {
-        this.width = 1920;
+        this.width = 920;
         this.height = 1080;
         this.title = "Mario";
         r = 1;
@@ -142,10 +143,13 @@ public class Window {
             // Poll events
             glfwPollEvents();
 
+            DebugDraw.beginFrame();
+
             glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT);
 
             if (dt >= 0) {
+                DebugDraw.draw();
                 currentScene.update(dt);
             }
 

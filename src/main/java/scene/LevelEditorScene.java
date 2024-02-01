@@ -5,7 +5,9 @@ import imgui.ImGui;
 import imgui.ImVec2;
 import jade.*;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
+import renderer.DebugDraw;
 import scene.Scene;
 import util.AssetPool;
 
@@ -57,9 +59,18 @@ public class LevelEditorScene extends Scene {
         AssetPool.getTexture("assets/images/blendImage2.png");
     }
 
+    float t = 0.0f;
     @Override
     public void update(float dt) {
         mouseControls.update(dt);
+
+        //cho đường thẳng chạy vòng tròn
+        float x = ((float)Math.sin(t) * 200.0f) + 600;
+        float y = ((float)Math.cos(t) * 200.0f) + 400;
+        t +=  0.05f;
+        //có 4 tham số cho 1 đưởng thẳng nối giữa 2 điểm: cái thứ 1 là điểm đầu tiền, thứ 2 điểm 2, thứ 3 là màu, thứ 4 là tgian nó tồn tại
+        DebugDraw.addLine2D(new Vector2f(600, 400), new Vector2f(x, y), new Vector3f(0,0,1), 10);
+
 
         for (GameObject go : this.gameObjects) {
             go.update(dt);
