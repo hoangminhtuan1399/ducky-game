@@ -3,7 +3,7 @@ package renderer;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-/** tạo đường thẳng lằng nhắng lắm lày: từ hình từ giác tạo thành đường thẳng */
+/** tạo đường kẻ lằng nhắng lắm lày: từ hình từ giác tạo thành đường kẻ */
 public class Line2D {
     private Vector2f from;
     private Vector2f to;

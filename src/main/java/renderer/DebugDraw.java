@@ -16,11 +16,11 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class DebugDraw {
-    private static int MAX_LINES = 500; // số lg đường thẳng tối đa
+    private static int MAX_LINES = 500; // số lg đường kẻ tối đa
     private static List<Line2D> lines = new ArrayList<>();
 
-    // 6 floats cho 1 vertex (đỉnh) (vd: vertex(x,y,z,r,b,g), xyz là tọa độ), 2 vertices (điểm) cho 1 đường thẳng (line)
-    // đây là số float cần cho 1 mảng float (đường thẳng) chứa đủ các số
+    // 6 floats cho 1 vertex (đỉnh) (vd: vertex(x,y,z,r,b,g), xyz là tọa độ), 2 vertices (điểm) cho 1 đường kẻ (line)
+    // đây là số float cần cho 1 mảng float (đường kẻ) chứa đủ các số
     private static float[] vertexArray = new float[MAX_LINES * 6 * 2];
     private static Shader shader = AssetPool.getShader("assets/shaders/debugLine2D.glsl");
 
@@ -40,7 +40,7 @@ public class DebugDraw {
         glBufferData(GL_ARRAY_BUFFER, vertexArray.length * Float.BYTES, GL_DYNAMIC_DRAW);
 
         //Enable the vertex array attributes
-        // mỗi đỉnh có 3 tọa độ mà đường thẳng có 2 đỉnh nên nhân 6
+        // mỗi đỉnh có 3 tọa độ mà đường kẻ có 2 đỉnh nên nhân 6
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 6 * Float.BYTES, 0);
         glEnableVertexAttribArray(0);
 
@@ -48,7 +48,7 @@ public class DebugDraw {
         glEnableVertexAttribArray(1);
 
         // SET LINE WIDTH
-        glLineWidth(10.0f);
+        glLineWidth(1.0f);
 
     }
 
@@ -72,7 +72,7 @@ public class DebugDraw {
 
         int index = 0;
         for (Line2D line : lines) {
-            for (int i = 0; i < 2; i++) { // 2 ở đây là 2 điểm của 1 đường thẳng
+            for (int i = 0; i < 2; i++) { // 2 ở đây là 2 điểm của 1 đường kẻ
                 Vector2f position = i == 0 ? line.getFrom() : line.getTo();
                 Vector3f color = line.getColor();
 
