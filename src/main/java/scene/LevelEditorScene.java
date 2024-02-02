@@ -59,7 +59,11 @@ public class LevelEditorScene extends Scene {
 
     private void loadResources() {
         AssetPool.getShader("assets/shaders/default.glsl");
-        AssetPool.addSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png", new Spritesheet(AssetPool.getTexture("assets/images/spritesheets/decorationsAndBlocks.png"), 16, 16, 81, 0));
+
+        // TODO: FIX TEXTURE SAVE SYSTEM TO USE PATH INSTEAD OF ID
+        AssetPool.addSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png",
+                new Spritesheet(AssetPool.getTexture("assets/images/spritesheets/decorationsAndBlocks.png"),
+                        16, 16, 81, 0));
         AssetPool.getTexture("assets/images/blendImage2.png");
     }
 
