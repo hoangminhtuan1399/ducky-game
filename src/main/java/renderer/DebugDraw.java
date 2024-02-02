@@ -4,6 +4,7 @@ import jade.Window;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import util.AssetPool;
+import util.JMath;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -116,7 +117,7 @@ public class DebugDraw {
     }
 
     //==============================
-    // add line2D methods
+    // add line2D methods: điểm đầu, điểm cuối của đường kẻ, màu, thời gian tồn tại
     //==============================
     public static void addLine2D (Vector2f from, Vector2f to) {
         // TODO: ADD CONSTANTS FOR COMMON COLORS
@@ -129,6 +130,78 @@ public class DebugDraw {
     public static void addLine2D (Vector2f from, Vector2f to, Vector3f color, int lifetime) {
         if (lines.size() >= MAX_LINES) return;
         DebugDraw.lines.add(new Line2D(from, to, color, lifetime));
+    }
 
+    //==============================
+    // add box2d methods: tâm của tứ giác, size của tứ giác, độ nghiêng, màu, thời gian tồn tại
+    //==============================
+    public static void addBox2D (Vector2f center, Vector2f dimensions, float rotation) {
+        // TODO: ADD CONSTANTS FOR COMMON COLORS
+        addBox2D(center, dimensions, rotation, new Vector3f(0, 1, 0), 1);
+    }
+    public static void addBox2D (Vector2f center, Vector2f dimensions, float rotation, Vector3f color) {
+
+        addBox2D(center, dimensions, rotation, color, 1);
+    }
+    public static void addBox2D (Vector2f center, Vector2f dimensions, float rotation, Vector3f color, int lifetime) {
+        // lấy các đỉnh của box từ tâm và size của hình tứ giác
+            //đỉnh dưới trái
+        Vector2f min = new Vector2f(center).sub(new Vector2f(dimensions).mul(0.5f));
+            //đỉnh trên phải
+        Vector2f max = new Vector2f(center).add(new Vector2f(dimensions).mul(0.5f));
+
+        // vẽ hình tứ giác:
+        Vector2f[] vertices = {
+            new Vector2f(min.x, min.y), new Vector2f(min.x, max.y),
+            new Vector2f(max.x, max.y), new Vector2f(max.x, min.y)
+        };
+
+        // cho hình tứ giác nó xoay
+        if (rotation != 0.0f) {
+            for (Vector2f vert : vertices) {
+                JMath.rotate(vert, rotation, center);
+            }
+        }
+
+        addLine2D(vertices[0], vertices[1], color, lifetime);
+        addLine2D(vertices[0], vertices[3], color, lifetime);
+        addLine2D(vertices[1], vertices[2], color, lifetime);
+        addLine2D(vertices[2], vertices[3], color, lifetime);
+    }
+
+    //==============================
+    // add Circle methods
+    //==============================
+    public static void addCircle (Vector2f center, float radius) {
+        // TODO: ADD CONSTANTS FOR COMMON COLORS
+        addCircle(center, radius, new Vector3f(0, 1, 0), 1);
+    }
+    public static void addCircle (Vector2f center, float radius, Vector3f color) {
+
+        addCircle(center, radius, color, 1);
+    }
+    public static void addCircle (Vector2f center, float radius, Vector3f color, int lifetime) {
+        //xác định các điểm quanh tâm hình tròn vd số 20 kia càng tăng thì càng tròn nma vòng lặp sẽ nhiều hơn - nặng
+        Vector2f[] points = new Vector2f[20];
+        // góc giữa các điểm liền kề nhau
+        int increment = 360 / points.length;
+        // góc hiện tại
+        int currentAngle = 0;
+
+        // xác định 1 tỷ điểm quanh tâm r nối vs nhay bằng tỷ đường kẻ là ra hình tròn
+        for (int i = 0; i < points.length; i++) {
+            Vector2f tmp = new Vector2f(0, radius);
+            JMath.rotate(tmp, currentAngle, new Vector2f());
+            points[i] = new Vector2f(tmp).add(center);
+
+            //vẽ các đường kẻ
+            if (i > 0) {
+                addLine2D(points[i - 1], points[i], color, lifetime);
+            }
+            // góc hiện tại tăng lên dần
+            currentAngle += increment;
+        }
+        // vòng lặp trên vé thiếu đường giữa điểm cuối và điểm đầu nên cần dòng này
+        addLine2D(points[points.length-1], points[0], color, lifetime);
     }
 }

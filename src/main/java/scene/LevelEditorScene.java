@@ -64,9 +64,17 @@ public class LevelEditorScene extends Scene {
     }
 
 //    float t = 0.0f;
+//    float angle = 0.0f;
+
     @Override
     public void update(float dt) {
         levelEditorStuff.update(dt);
+//        //tạo thử cái hình tròn
+//        DebugDraw.addCircle(new Vector2f(400, 200), 64, new Vector3f(1,0,0), 1);
+
+//        // tọa thử cái tứ giác xoay xoay
+//        DebugDraw.addBox2D(new Vector2f(400, 200), new Vector2f(64, 32), angle, new Vector3f(0,1,0), 1);
+//        angle += 40.0f * dt;
 
 //        //cho đường kẻ chạy vòng tròn
 //        float x = ((float)Math.sin(t) * 200.0f) + 600;
