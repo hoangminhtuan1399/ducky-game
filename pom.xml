@@ -19,7 +19,7 @@
     <lwjgl.version>3.3.1</lwjgl.version>
     <joml.version>1.9.24</joml.version>
     <lwjgl.natives>natives-windows</lwjgl.natives>
-    <imgui.java.version>1.86.11</imgui.java.version>
+    <imgui.java.version>1.77-0.17.1</imgui.java.version>
   </properties>
   <profiles>
     <profile>
@@ -63,23 +63,23 @@
   <dependencies>
 
     <dependency>
-      <groupId>io.github.spair</groupId>
-      <artifactId>imgui-java-binding</artifactId>
+      <groupId>io.imgui.java</groupId>
+      <artifactId>binding</artifactId>
       <version>${imgui.java.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.github.spair</groupId>
-      <artifactId>imgui-java-lwjgl3</artifactId>
+      <groupId>io.imgui.java</groupId>
+      <artifactId>lwjgl3</artifactId>
       <version>${imgui.java.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.github.spair</groupId>
-      <artifactId>imgui-java-natives-windows</artifactId>
+      <groupId>io.imgui.java</groupId>
+      <artifactId>natives-windows</artifactId>
       <version>${imgui.java.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.github.spair</groupId>
-      <artifactId>imgui-java-natives-linux</artifactId>
+      <groupId>io.imgui.java</groupId>
+      <artifactId>natives-linux</artifactId>
       <version>${imgui.java.version}</version>
     </dependency>
 

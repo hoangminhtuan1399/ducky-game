@@ -1,9 +1,7 @@
 package jade;
 
-import imgui.ImFontAtlas;
-import imgui.ImFontConfig;
-import imgui.ImGui;
-import imgui.ImGuiIO;
+import editor.GameViewWindow;
+import imgui.*;
 import imgui.callback.ImStrConsumer;
 import imgui.callback.ImStrSupplier;
 import imgui.flag.*;
@@ -170,7 +168,7 @@ public class ImGuiLayer {
 
         // ------------------------------------------------------------
         // Use freetype instead of stb_truetype to build a fonts texture
-//        ImGuiFreeType.buildFontAtlas(fontAtlas, ImGuiFreeType.RasterizerFlags.LightHinting);
+        ImGuiFreeType.buildFontAtlas(fontAtlas, ImGuiFreeType.RasterizerFlags.LightHinting);
 
         // Method initializes LWJGL3 renderer.
         // This method SHOULD be called after you've initialized your ImGui configuration (fonts and so on).
@@ -186,6 +184,7 @@ public class ImGuiLayer {
         setupDockspace(); // thiết lập không gian đế
         currentScene.sceneImgui();
         ImGui.showDemoWindow();
+        GameViewWindow.imgui();
         ImGui.end();
         ImGui.render();
 
@@ -216,7 +215,7 @@ public class ImGuiLayer {
     private void endFrame() {
         // After Dear ImGui prepared a draw data, we use it in the LWJGL3 renderer.
         // At that moment ImGui will be rendered to the current OpenGL context.
-        imGuiGl3.renderDrawData(ImGui.getDrawData());
+        imGuiGl3.render(ImGui.getDrawData());
     }
 
     // If you want to clean a room after yourself - do it by yourself
