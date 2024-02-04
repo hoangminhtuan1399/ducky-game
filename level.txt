@@ -15,7 +15,6 @@
           "sprite": {
             "texture": {
               "filepath": "assets/images/spritesheets/decorationsAndBlocks.png",
-              "texID": 2,
               "width": 112,
               "height": 192
             },
@@ -72,7 +71,6 @@
           "sprite": {
             "texture": {
               "filepath": "assets/images/spritesheets/decorationsAndBlocks.png",
-              "texID": 2,
               "width": 112,
               "height": 192
             },
@@ -129,7 +127,6 @@
           "sprite": {
             "texture": {
               "filepath": "assets/images/spritesheets/decorationsAndBlocks.png",
-              "texID": 2,
               "width": 112,
               "height": 192
             },
@@ -186,7 +183,6 @@
           "sprite": {
             "texture": {
               "filepath": "assets/images/spritesheets/decorationsAndBlocks.png",
-              "texID": 2,
               "width": 112,
               "height": 192
             },
@@ -243,7 +239,6 @@
           "sprite": {
             "texture": {
               "filepath": "assets/images/spritesheets/decorationsAndBlocks.png",
-              "texID": 2,
               "width": 112,
               "height": 192
             },
@@ -300,7 +295,6 @@
           "sprite": {
             "texture": {
               "filepath": "assets/images/spritesheets/decorationsAndBlocks.png",
-              "texID": 2,
               "width": 112,
               "height": 192
             },

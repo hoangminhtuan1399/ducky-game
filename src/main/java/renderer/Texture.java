@@ -10,12 +10,9 @@ import static org.lwjgl.stb.STBImage.*;
 
 public class Texture {
     private String filepath;
-    private int texID;
+    private transient int texID; // tránh tuần tự hóa id kết cấu
     private int width, height;
 
-//    public Texture(String filepath) {
-//
-//    }
     public Texture () {
         texID = -1;
         width = -1;
