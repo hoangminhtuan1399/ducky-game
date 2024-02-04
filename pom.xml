@@ -16,9 +16,10 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.target>12</maven.compiler.target>
     <maven.compiler.source>12</maven.compiler.source>
-    <lwjgl.version>3.2.3</lwjgl.version>
+    <lwjgl.version>3.3.1</lwjgl.version>
     <joml.version>1.9.24</joml.version>
     <lwjgl.natives>natives-windows</lwjgl.natives>
+    <imgui.java.version>1.86.11</imgui.java.version>
   </properties>
   <profiles>
     <profile>
@@ -62,24 +63,24 @@
   <dependencies>
 
     <dependency>
-      <groupId>io.imgui.java</groupId>
-      <artifactId>binding</artifactId>
-      <version>1.76-0.9</version>
+      <groupId>io.github.spair</groupId>
+      <artifactId>imgui-java-binding</artifactId>
+      <version>${imgui.java.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.imgui.java</groupId>
-      <artifactId>lwjgl3</artifactId>
-      <version>1.76-0.9</version>
+      <groupId>io.github.spair</groupId>
+      <artifactId>imgui-java-lwjgl3</artifactId>
+      <version>${imgui.java.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.imgui.java</groupId>
-      <artifactId>natives-linux</artifactId>
-      <version>1.76-0.9</version>
+      <groupId>io.github.spair</groupId>
+      <artifactId>imgui-java-natives-windows</artifactId>
+      <version>${imgui.java.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.imgui.java</groupId>
-      <artifactId>natives-windows</artifactId>
-      <version>1.76-0.9</version>
+      <groupId>io.github.spair</groupId>
+      <artifactId>imgui-java-natives-linux</artifactId>
+      <version>${imgui.java.version}</version>
     </dependency>
 
     <dependency>
