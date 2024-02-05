@@ -3,12 +3,11 @@ package scene;
 import components.*;
 import imgui.ImGui;
 import imgui.ImVec2;
-import jade.*;
+import jade.Camera;
+import jade.GameObject;
+import jade.Prefabs;
+import jade.Transform;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
-import renderer.DebugDraw;
-import scene.Scene;
 import util.AssetPool;
 
 public class LevelEditorScene extends Scene {
@@ -100,6 +99,11 @@ public class LevelEditorScene extends Scene {
             go.update(dt);
         }
 
+        this.renderer.render();
+    }
+
+    @Override
+    public void render() {
         this.renderer.render();
     }
 

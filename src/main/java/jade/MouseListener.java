@@ -104,6 +104,20 @@ public class MouseListener {
         }
     }
 
+    public static float getScreenX() {
+        float currentX = getX() - get().gameViewportPos.x;
+        /** chuyển đổi tọa độ x của chuột từ tọa độ viewport thành tọa độ màn hình với chiều rộng 3840 **/
+        currentX = (currentX / get().gameViewportSize.x) * 3840.0f;
+        return currentX;
+    }
+
+    public static float getScreenY() {
+        float currentY = getY() - get().gameViewportPos.y;
+        /** chuyển đổi toạ độ y của chuột từ toọa độ của viewport thành tọa độ màn hình với chiều cao 2160 **/
+        currentY = 2160.0f - ((currentY / get().gameViewportSize.y) * 2160.0f);
+        return currentY;
+    }
+
     public static float getOrthoX() {
 
         float currentX = getX() - get().gameViewportPos.x;
