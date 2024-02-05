@@ -3,12 +3,11 @@ package scene;
 import components.*;
 import imgui.ImGui;
 import imgui.ImVec2;
-import jade.*;
+import jade.Camera;
+import jade.GameObject;
+import jade.Prefabs;
+import jade.Transform;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
-import renderer.DebugDraw;
-import scene.Scene;
 import util.AssetPool;
 
 public class LevelEditorScene extends Scene {
@@ -34,7 +33,9 @@ public class LevelEditorScene extends Scene {
         /** Load spritesheet from AssetPool trước khi tạo GameObject */
         sprites = AssetPool.getSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png");
         if (levelLoaded) {
-            this.activeGameObject = gameObjects.get(0);
+            if (gameObjects.size() > 0) {
+                this.activeGameObject = gameObjects.get(0);
+            }
             return;
         }
 
@@ -60,15 +61,21 @@ public class LevelEditorScene extends Scene {
     private void loadResources() {
         AssetPool.getShader("assets/shaders/default.glsl");
 
-        // TODO: FIX TEXTURE SAVE SYSTEM TO USE PATH INSTEAD OF ID
         AssetPool.addSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png",
                 new Spritesheet(AssetPool.getTexture("assets/images/spritesheets/decorationsAndBlocks.png"),
                         16, 16, 81, 0));
         AssetPool.getTexture("assets/images/blendImage2.png");
+
+        for (GameObject g : gameObjects){
+            if (g.getComponent(SpriteRenderer.class) != null){
+                SpriteRenderer spr = g.getComponent(SpriteRenderer.class);
+                if (spr.getTexture() != null){
+                    spr.setTexture(AssetPool.getTexture(spr.getTexture().getFilepath()));
+                }
+            }
+        }
     }
 
-//    float t = 0.0f;
-//    float angle = 0.0f;
 
     @Override
     public void update(float dt) {
@@ -92,6 +99,11 @@ public class LevelEditorScene extends Scene {
             go.update(dt);
         }
 
+        this.renderer.render();
+    }
+
+    @Override
+    public void render() {
         this.renderer.render();
     }
 
