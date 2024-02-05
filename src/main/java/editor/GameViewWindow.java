@@ -9,9 +9,9 @@ import org.joml.Vector2f;
 
 public class GameViewWindow {
 
-    private static float leftX, rightX, topY, bottomY;
+    private  float leftX, rightX, topY, bottomY;
 
-    public static void imgui() {
+    public  void imgui() {
         ImGui.begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
 
         /** tính toán kích thước và vị trí cửa sổ thông qua các phương thức hỗ trợ **/
@@ -43,13 +43,13 @@ public class GameViewWindow {
     }
 
     /** Kiểm tra xem chuột có nằm trong viewport trò chơi không **/
-    public static boolean getWantCaptureMouse() {
+    public  boolean getWantCaptureMouse() {
         return MouseListener.getX() >= leftX && MouseListener.getX() <= rightX &&
                 MouseListener.getY() >= bottomY && MouseListener.getY() <= topY;
     }
 
     /** Phương thức tính toán kích thước lớn nhất cho viewport dựa trên tỷ lệ khung hình cửa sổ **/
-    private static ImVec2 getLargestSizeForViewport() {
+    private  ImVec2 getLargestSizeForViewport() {
         ImVec2 windowSize = new ImVec2();
         ImGui.getContentRegionAvail(windowSize);
 
@@ -69,7 +69,7 @@ public class GameViewWindow {
     }
 
     /** Xử lý việc viewport luôn được căn giữa dựa trên kích thước của cửa sổ **/
-    private static ImVec2 getCenteredPositionForViewport(ImVec2 aspectSize) {
+    private  ImVec2 getCenteredPositionForViewport(ImVec2 aspectSize) {
         ImVec2 windowSize = new ImVec2();
         ImGui.getContentRegionAvail(windowSize);
         windowSize.x -= ImGui.getScrollX();
