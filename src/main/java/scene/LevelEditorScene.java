@@ -15,7 +15,7 @@ public class LevelEditorScene extends Scene {
     private GameObject obj1;
     private Spritesheet sprites;
     SpriteRenderer obj1Sprite;
-//    MouseControls mouseControls = new MouseControls();
+    //    MouseControls mouseControls = new MouseControls();
     GameObject levelEditorStuff = new GameObject("LevelEditor", new Transform(new Vector2f()), 0);
 
     public LevelEditorScene() {
@@ -24,15 +24,10 @@ public class LevelEditorScene extends Scene {
 
     @Override
     public void init() {
+        this.camera = new Camera(new Vector2f(-250, 0));
         levelEditorStuff.addComponent(new MouseControls());
         levelEditorStuff.addComponent(new GridLines());
-
-        loadResources();
-        this.camera = new Camera(new Vector2f(-250, 0));
-
-        /** Load spritesheet from AssetPool trước khi tạo GameObject */
-        sprites = AssetPool.getSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png");
-
+        levelEditorStuff.addComponent(new EditorCamera(this.camera));
 
 //        obj1 = new GameObject("Object 1", new Transform(new Vector2f(200, 100), new Vector2f(256, 256)), 2);
 //        obj1Sprite = new SpriteRenderer();
@@ -51,6 +46,11 @@ public class LevelEditorScene extends Scene {
 //        obj2SpriteRenderer.setSprite(obj2Sprite);
 //        obj2.addComponent(obj2SpriteRenderer);
 //        this.addGameObjectToScene(obj2);
+
+        loadResources();
+
+        /** Load spritesheet from AssetPool trước khi tạo GameObject */
+        sprites = AssetPool.getSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png");
     }
 
     private void loadResources() {
@@ -75,20 +75,7 @@ public class LevelEditorScene extends Scene {
     @Override
     public void update(float dt) {
         levelEditorStuff.update(dt);
-//        //tạo thử cái hình tròn
-//        DebugDraw.addCircle(new Vector2f(400, 200), 64, new Vector3f(1,0,0), 1);
-
-//        // tọa thử cái tứ giác xoay xoay
-//        DebugDraw.addBox2D(new Vector2f(400, 200), new Vector2f(64, 32), angle, new Vector3f(0,1,0), 1);
-//        angle += 40.0f * dt;
-
-//        //cho đường kẻ chạy vòng tròn
-//        float x = ((float)Math.sin(t) * 200.0f) + 600;
-//        float y = ((float)Math.cos(t) * 200.0f) + 400;
-//        t +=  0.05f;
-//        //có 4 tham số cho 1 đưởng kẻ nối giữa 2 điểm: cái thứ 1 là điểm đầu tiền, thứ 2 điểm 2, thứ 3 là màu, thứ 4 là tgian nó tồn tại
-//        DebugDraw.addLine2D(new Vector2f(600, 400), new Vector2f(x, y), new Vector3f(0,0,1), 10);
-
+        this.camera.adjustProjection();
 
         for (GameObject go : this.gameObjects) {
             go.update(dt);
