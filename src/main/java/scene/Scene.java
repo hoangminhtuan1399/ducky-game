@@ -51,7 +51,8 @@ public abstract class Scene {
             this.renderer.add(go);
         }
     }
-
+//   tạo một luồng từ danh sách gameObjects, và lọc ra những đối tượng có uid (ID) trùng khớp với gameObjectId
+//   trả về Optional chứa phần tử đầu tiên thỏa mãn điều kiện lọc. Nếu không tìm thấy, Optional sẽ rỗng
     public GameObject getGameObject(int gameObjectId) {
         Optional<GameObject> result = this.gameObjects.stream()
                 .filter(gameObject -> gameObject.getUid() == gameObjectId)
@@ -79,7 +80,13 @@ public abstract class Scene {
 
         try {
             FileWriter writer = new FileWriter("level.txt");
-            writer.write(gson.toJson(this.gameObjects));
+            List<GameObject> objsToSerialize = new ArrayList<>();
+            for (GameObject obj : this.gameObjects) {
+                if (obj.doSerialization()) {
+                    objsToSerialize.add(obj);
+                }
+            }
+            writer.write(gson.toJson(objsToSerialize));
             writer.close();
         } catch(IOException e) {
             e.printStackTrace();
@@ -125,3 +132,4 @@ public abstract class Scene {
         }
     }
 }
+
