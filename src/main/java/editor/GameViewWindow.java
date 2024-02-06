@@ -32,7 +32,7 @@ public class GameViewWindow {
         topY = topLeft.y + windowSize.y;
 
         /** Dòng này vẽ hình ảnh từ framebuffer của cửa sổ trò chơi vào cửa sổ ImGui sử dụng một texture ID **/
-        int textureId = Window.getFramebuffer().getTextureID();
+        int textureId = Window.getFramebuffer().getTextureId();
         ImGui.image(textureId, windowSize.x, windowSize.y, 0, 1, 1, 0);
 
         /** Xử lý chuột để cho hình ảnh kh cách xa chuột **/

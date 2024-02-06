@@ -8,15 +8,23 @@ import jade.GameObject;
 import jade.Prefabs;
 import jade.Transform;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+import physics2d.PhysicsSystem2D;
+import physics2d.primitives.Circle;
+import physics2d.rigidbody.Rigidbody2D;
+import renderer.DebugDraw;
+import scene.Scene;
 import util.AssetPool;
 
 public class LevelEditorScene extends Scene {
 
-    private GameObject obj1;
     private Spritesheet sprites;
-    SpriteRenderer obj1Sprite;
-    //    MouseControls mouseControls = new MouseControls();
+
     GameObject levelEditorStuff = new GameObject("LevelEditor", new Transform(new Vector2f()), 0);
+    PhysicsSystem2D physics = new PhysicsSystem2D(1.0f / 60.0f, new Vector2f(0, -10));
+    Transform obj1, obj2;
+    Rigidbody2D rb1, rb2;
 
     public LevelEditorScene() {
 
@@ -29,27 +37,29 @@ public class LevelEditorScene extends Scene {
         levelEditorStuff.addComponent(new GridLines());
         levelEditorStuff.addComponent(new EditorCamera(this.camera));
 
-//        obj1 = new GameObject("Object 1", new Transform(new Vector2f(200, 100), new Vector2f(256, 256)), 2);
-//        obj1Sprite = new SpriteRenderer();
-//        obj1Sprite.setColor(new Vector4f(1, 0, 0, 1));
-//        obj1.addComponent(obj1Sprite);
+//        obj1 = new Transform(new Vector2f(100, 500));
+//        obj2 = new Transform(new Vector2f(100, 300));
 //
-//        /** Add 1 component để test hàm ImGUI */
-//        obj1.addComponent(new RigidBody());
-//        this.addGameObjectToScene(obj1);
-//        this.activeGameObject = obj1;
+//        rb1 = new Rigidbody2D();
+//        rb2 = new Rigidbody2D();
+//        rb1.setRawTransform(obj1);
+//        rb2.setRawTransform(obj2);
+//        rb1.setMass(100.0f);
+//        rb2.setMass(200.0f);
 //
-//        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), 3);
-//        SpriteRenderer obj2SpriteRenderer = new SpriteRenderer();
-//        Sprite obj2Sprite = new Sprite();
-//        obj2Sprite.setTexture(AssetPool.getTexture("assets/images/blendImage2.png"));
-//        obj2SpriteRenderer.setSprite(obj2Sprite);
-//        obj2.addComponent(obj2SpriteRenderer);
-//        this.addGameObjectToScene(obj2);
+//        Circle c1 = new Circle();
+//        c1.setRadius(10.0f);
+//        c1.setRigidbody(rb1);
+//        Circle c2 = new Circle();
+//        c2.setRadius(20.0f);
+//        c2.setRigidbody(rb2);
+//        rb1.setCollider(c1);
+//        rb2.setCollider(c2);
+//
+//        physics.addRigidbody(rb1, true);
+//        physics.addRigidbody(rb2, false);
 
         loadResources();
-
-        /** Load spritesheet from AssetPool trước khi tạo GameObject */
         sprites = AssetPool.getSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png");
     }
 
@@ -61,16 +71,15 @@ public class LevelEditorScene extends Scene {
                         16, 16, 81, 0));
         AssetPool.getTexture("assets/images/blendImage2.png");
 
-        for (GameObject g : gameObjects){
-            if (g.getComponent(SpriteRenderer.class) != null){
+        for (GameObject g : gameObjects) {
+            if (g.getComponent(SpriteRenderer.class) != null) {
                 SpriteRenderer spr = g.getComponent(SpriteRenderer.class);
-                if (spr.getTexture() != null){
+                if (spr.getTexture() != null) {
                     spr.setTexture(AssetPool.getTexture(spr.getTexture().getFilepath()));
                 }
             }
         }
     }
-
 
     @Override
     public void update(float dt) {
@@ -81,7 +90,9 @@ public class LevelEditorScene extends Scene {
             go.update(dt);
         }
 
-        this.renderer.render();
+//        DebugDraw.addCircle(obj1.position, 10.0f, new Vector3f(1, 0, 0));
+//        DebugDraw.addCircle(obj2.position, 20.0f, new Vector3f(0.2f, 0.8f, 0.1f));
+//        physics.update(dt);
     }
 
     @Override
@@ -101,43 +112,24 @@ public class LevelEditorScene extends Scene {
         ImGui.getStyle().getItemSpacing(itemSpacing);
 
         float windowX2 = windowPos.x + windowSize.x;
-
-        /** Duyệt qua từng phần tử trong mảng sprite */
-        for (int i = 0; i < sprites.size(); i++) {
-            /** Lấy thông tin sprite để khởi tạo image button */
+        for (int i=0; i < sprites.size(); i++) {
             Sprite sprite = sprites.getSprite(i);
             float spriteWidth = sprite.getWidth() * 4;
             float spriteHeight = sprite.getHeight() * 4;
             int id = sprite.getTexId();
             Vector2f[] texCoords = sprite.getTexCoords();
 
-
-
-
             ImGui.pushID(i);
-            /**
-             * Add image button vào ImGui và kiểm tra event listener tại image button đó:
-             * texTureId
-             * kích thước của sprite (width, height) phải vừa vs gridlines
-             * toạ độ góc trên-phải và dưới-trái
-             * */
             if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
                 GameObject object = Prefabs.generateSpriteObject(sprite, 32, 32);
                 levelEditorStuff.getComponent(MouseControls.class).pickupObject(object);
             }
             ImGui.popID();
 
-            /** Kiểm tra xem button tiếp theo có bị tràn ra ngoài window không */
             ImVec2 lastButtonPos = new ImVec2();
             ImGui.getItemRectMax(lastButtonPos);
-
-            /** Lấy viền ngoài của button hiện tại */
             float lastButtonX2 = lastButtonPos.x;
-
-            /** Lấy viền ngoài của button tiếp theo */
             float nextButtonX2 = lastButtonX2 + itemSpacing.x + spriteWidth;
-
-            /** Kiểm tra tràn viền */
             if (i + 1 < sprites.size() && nextButtonX2 < windowX2) {
                 ImGui.sameLine();
             }
