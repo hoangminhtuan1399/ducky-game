@@ -1,4 +1,4 @@
-package scene;
+package scenes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -8,6 +8,7 @@ import imgui.ImGui;
 import jade.Camera;
 import jade.GameObject;
 import jade.GameObjectDeserializer;
+import jade.Transform;
 import renderer.Renderer;
 
 import java.io.FileWriter;
@@ -51,8 +52,7 @@ public abstract class Scene {
             this.renderer.add(go);
         }
     }
-//   tạo một luồng từ danh sách gameObjects, và lọc ra những đối tượng có uid (ID) trùng khớp với gameObjectId
-//   trả về Optional chứa phần tử đầu tiên thỏa mãn điều kiện lọc. Nếu không tìm thấy, Optional sẽ rỗng
+
     public GameObject getGameObject(int gameObjectId) {
         Optional<GameObject> result = this.gameObjects.stream()
                 .filter(gameObject -> gameObject.getUid() == gameObjectId)
@@ -69,6 +69,13 @@ public abstract class Scene {
 
     public void imgui() {
 
+    }
+
+    public GameObject createGameObject(String name) {
+        GameObject go = new GameObject(name);
+        go.addComponent(new Transform());
+        go.transform = go.getComponent(Transform.class);
+        return go;
     }
 
     public void saveExit() {
@@ -132,4 +139,3 @@ public abstract class Scene {
         }
     }
 }
-

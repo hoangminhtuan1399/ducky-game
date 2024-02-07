@@ -4,9 +4,9 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import renderer.*;
-import scene.LevelEditorScene;
-import scene.LevelScene;
-import scene.Scene;
+import scenes.LevelEditorScene;
+import scenes.LevelScene;
+import scenes.Scene;
 import util.AssetPool;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;

@@ -1,25 +1,19 @@
-package scene;
+package scenes;
 
 import components.*;
 import imgui.ImGui;
 import imgui.ImVec2;
 import jade.*;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
-import physics2d.PhysicsSystem2D;
-import physics2d.primitives.Circle;
-import physics2d.rigidbody.Rigidbody2D;
-import renderer.DebugDraw;
-import scene.Scene;
-
+import physics2dtmp.PhysicsSystem2D;
+import physics2dtmp.rigidbody.Rigidbody2D;
 import util.AssetPool;
 
 public class LevelEditorScene extends Scene {
 
     private Spritesheet sprites;
 
-    GameObject levelEditorStuff = new GameObject("LevelEditor", new Transform(new Vector2f()), 0);
+    GameObject levelEditorStuff = this.createGameObject("LevelEditor");
     PhysicsSystem2D physics = new PhysicsSystem2D(1.0f / 60.0f, new Vector2f(0, -10));
     Transform obj1, obj2;
     Rigidbody2D rb1, rb2;
@@ -39,6 +33,7 @@ public class LevelEditorScene extends Scene {
         levelEditorStuff.addComponent(new GridLines());
         levelEditorStuff.addComponent(new EditorCamera(this.camera));
         levelEditorStuff.addComponent(new GizmoSystem(gizmos));
+
         levelEditorStuff.start();
 
 //        obj1 = new Transform(new Vector2f(100, 500));

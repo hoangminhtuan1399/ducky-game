@@ -9,9 +9,7 @@ import imgui.flag.*;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.type.ImBoolean;
 import renderer.PickingTexture;
-import scene.Scene;
-
-import java.util.PropertyResourceBundle;
+import scenes.Scene;
 
 import static org.lwjgl.glfw.GLFW.*;
 

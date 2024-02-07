@@ -5,7 +5,7 @@ import imgui.ImGui;
 import jade.GameObject;
 import jade.MouseListener;
 import renderer.PickingTexture;
-import scene.Scene;
+import scenes.Scene;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 
 public class PropertiesWindow {
