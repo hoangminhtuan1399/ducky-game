@@ -7,36 +7,33 @@ import org.joml.Vector3f;
 import renderer.DebugDraw;
 import util.Settings;
 
-public class GridLines extends Component{
+public class GridLines extends Component {
 
     @Override
-    public void update(float dt) {
+    public void editorUpdate(float dt) {
         Camera camera = Window.getScene().camera();
-        Vector2f cameraPos = camera.position; // vị trí camera
-        Vector2f projectionSize = camera.getProjectionSize(); // hình như là độ lớn của map
+        Vector2f cameraPos = camera.position;
+        Vector2f projectionSize = camera.getProjectionSize();
 
-        // điểm đầu cho gridline (lưới hay các ô vuông ấy)
-        int firstX = ((int)(cameraPos.x / Settings.GRID_WIDTH) - 1) * Settings.GRID_WIDTH;
+        int firstX = ((int)(cameraPos.x / Settings.GRID_WIDTH) - 1) * Settings.GRID_HEIGHT;
         int firstY = ((int)(cameraPos.y / Settings.GRID_HEIGHT) - 1) * Settings.GRID_HEIGHT;
 
-        int numVtLines = (int)(projectionSize.x * camera.getZoom()/ Settings.GRID_WIDTH) + 2; // số đường kẻ dọc
-        int numHzLines = (int)(projectionSize.y * camera.getZoom()/ Settings.GRID_HEIGHT) + 2; //số đường kẻ ngang
+        int numVtLines = (int)(projectionSize.x * camera.getZoom() / Settings.GRID_WIDTH) + 2;
+        int numHzLines = (int)(projectionSize.y * camera.getZoom() / Settings.GRID_HEIGHT) + 2;
 
         int height = (int)(projectionSize.y * camera.getZoom()) + Settings.GRID_HEIGHT * 2;
-        int width = (int)(projectionSize.x * camera.getZoom())+ Settings.GRID_WIDTH * 2;
+        int width = (int)(projectionSize.x * camera.getZoom()) + Settings.GRID_WIDTH * 2;
 
-        //bắt đầu vẽ các đường kẻ
-        int maxLines = Math.max(numHzLines, numVtLines);
+        int maxLines = Math.max(numVtLines, numHzLines);
         Vector3f color = new Vector3f(0.2f, 0.2f, 0.2f);
-        for (int i = 0; i < maxLines; i++) {
+        for (int i=0; i < maxLines; i++) {
             int x = firstX + (Settings.GRID_WIDTH * i);
             int y = firstY + (Settings.GRID_HEIGHT * i);
 
-            // vẽ đường kẻ dọc
             if (i < numVtLines) {
                 DebugDraw.addLine2D(new Vector2f(x, firstY), new Vector2f(x, firstY + height), color);
             }
-            // vẽ đường kẻ ngang
+
             if (i < numHzLines) {
                 DebugDraw.addLine2D(new Vector2f(firstX, y), new Vector2f(firstX + width, y), color);
             }

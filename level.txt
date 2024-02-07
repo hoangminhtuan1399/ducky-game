@@ -1,14 +1,14 @@
 [
   {
-    "uid": 1,
+    "uid": 0,
     "name": "Sprite_Object_Gen",
     "components": [
       {
         "type": "jade.Transform",
         "properties": {
           "position": {
-            "x": 256.0,
-            "y": 290.14267
+            "x": 334.7257,
+            "y": 231.0878
           },
           "scale": {
             "x": 32.0,
@@ -23,9 +23,9 @@
         "type": "components.SpriteRenderer",
         "properties": {
           "color": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0,
+            "x": 0.84347826,
+            "y": 0.6381097,
+            "z": 0.6381097,
             "w": 1.0
           },
           "sprite": {
@@ -57,20 +57,39 @@
           },
           "uid": 20
         }
+      },
+      {
+        "type": "physics2d.components.Box2DCollider",
+        "properties": {
+          "halfSize": {
+            "x": 17.3,
+            "y": 13.4
+          },
+          "origin": {
+            "x": 14.7,
+            "y": 23.3
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "uid": 86
+        }
       }
     ],
-    "doSerialization": true
+    "doSerialization": true,
+    "isDead": false
   },
   {
-    "uid": 2,
+    "uid": 1,
     "name": "Sprite_Object_Gen",
     "components": [
       {
         "type": "jade.Transform",
         "properties": {
           "position": {
-            "x": 79.637634,
-            "y": 397.19705
+            "x": 73.26587,
+            "y": 197.38097
           },
           "scale": {
             "x": 32.0,
@@ -121,18 +140,19 @@
         }
       }
     ],
-    "doSerialization": true
+    "doSerialization": true,
+    "isDead": false
   },
   {
-    "uid": 3,
+    "uid": 2,
     "name": "Sprite_Object_Gen",
     "components": [
       {
         "type": "jade.Transform",
         "properties": {
           "position": {
-            "x": 352.0,
-            "y": 326.0
+            "x": 348.2,
+            "y": 324.9
           },
           "scale": {
             "x": 32.0,
@@ -181,12 +201,47 @@
           },
           "uid": 42
         }
+      },
+      {
+        "type": "physics2d.components.Rigidbody2D",
+        "properties": {
+          "velocity": {
+            "x": -3.0,
+            "y": -6.8
+          },
+          "angularDamping": 9.6,
+          "linearDamping": 0.9,
+          "mass": 0.0,
+          "bodyType": "Dynamic",
+          "fixedRotation": false,
+          "continuousCollision": true,
+          "uid": 82
+        }
+      },
+      {
+        "type": "physics2d.components.Box2DCollider",
+        "properties": {
+          "halfSize": {
+            "x": 4.0,
+            "y": 7.7
+          },
+          "origin": {
+            "x": 9.9,
+            "y": 7.8
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "uid": 83
+        }
       }
     ],
-    "doSerialization": true
+    "doSerialization": true,
+    "isDead": false
   },
   {
-    "uid": 4,
+    "uid": 3,
     "name": "Sprite_Object_Gen",
     "components": [
       {
@@ -243,8 +298,36 @@
           },
           "uid": 62
         }
+      },
+      {
+        "type": "physics2d.components.CircleCollider",
+        "properties": {
+          "radius": 1.0,
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "uid": 84
+        }
+      },
+      {
+        "type": "physics2d.components.Rigidbody2D",
+        "properties": {
+          "velocity": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "angularDamping": 0.8,
+          "linearDamping": 0.9,
+          "mass": 0.0,
+          "bodyType": "Dynamic",
+          "fixedRotation": false,
+          "continuousCollision": true,
+          "uid": 85
+        }
       }
     ],
-    "doSerialization": true
+    "doSerialization": true,
+    "isDead": false
   }
 ]

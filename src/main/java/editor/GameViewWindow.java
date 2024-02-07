@@ -5,23 +5,36 @@ import imgui.ImVec2;
 import imgui.flag.ImGuiWindowFlags;
 import jade.MouseListener;
 import jade.Window;
+import observers.EventSystem;
+import observers.events.Event;
+import observers.events.EventType;
 import org.joml.Vector2f;
 
 public class GameViewWindow {
 
-    private  float leftX, rightX, topY, bottomY;
+    private float leftX, rightX, topY, bottomY;
+    private boolean isPlaying = false;
 
-    public  void imgui() {
-        ImGui.begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
+    public void imgui() {
+        ImGui.begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse
+                | ImGuiWindowFlags.MenuBar);
 
-        /** tính toán kích thước và vị trí cửa sổ thông qua các phương thức hỗ trợ **/
+        ImGui.beginMenuBar();
+        if (ImGui.menuItem("Play", "", isPlaying, !isPlaying)) {
+            isPlaying = true;
+            EventSystem.notify(null, new Event(EventType.GameEngineStartPlay));
+        }
+        if (ImGui.menuItem("Stop", "", !isPlaying, isPlaying)) {
+            isPlaying = false;
+            EventSystem.notify(null, new Event(EventType.GameEngineStopPlay));
+        }
+        ImGui.endMenuBar();
+
         ImVec2 windowSize = getLargestSizeForViewport();
         ImVec2 windowPos = getCenteredPositionForViewport(windowSize);
 
-        /** Đặt vị trí con trỏ của ImGui trong viewport tại vị trí đã tính toán trước đó **/
         ImGui.setCursorPos(windowPos.x, windowPos.y);
 
-        /** Lấy tọa độ màn hình của điểm đầu của cửa sổ ImGui, cập nhật các biến đó để lưu trữ tọa độ của caác cạnh trái phải trên dưới **/
         ImVec2 topLeft = new ImVec2();
         ImGui.getCursorScreenPos(topLeft);
         topLeft.x -= ImGui.getScrollX();
@@ -31,29 +44,23 @@ public class GameViewWindow {
         rightX = topLeft.x + windowSize.x;
         topY = topLeft.y + windowSize.y;
 
-        /** Dòng này vẽ hình ảnh từ framebuffer của cửa sổ trò chơi vào cửa sổ ImGui sử dụng một texture ID **/
         int textureId = Window.getFramebuffer().getTextureId();
         ImGui.image(textureId, windowSize.x, windowSize.y, 0, 1, 1, 0);
 
-        /** Xử lý chuột để cho hình ảnh kh cách xa chuột **/
         MouseListener.setGameViewportPos(new Vector2f(topLeft.x, topLeft.y));
         MouseListener.setGameViewportSize(new Vector2f(windowSize.x, windowSize.y));
 
         ImGui.end();
     }
 
-    /** Kiểm tra xem chuột có nằm trong viewport trò chơi không **/
-    public  boolean getWantCaptureMouse() {
+    public boolean getWantCaptureMouse() {
         return MouseListener.getX() >= leftX && MouseListener.getX() <= rightX &&
                 MouseListener.getY() >= bottomY && MouseListener.getY() <= topY;
     }
 
-    /** Phương thức tính toán kích thước lớn nhất cho viewport dựa trên tỷ lệ khung hình cửa sổ **/
-    private  ImVec2 getLargestSizeForViewport() {
+    private ImVec2 getLargestSizeForViewport() {
         ImVec2 windowSize = new ImVec2();
         ImGui.getContentRegionAvail(windowSize);
-
-        //giảm đi giá trị cuộn theo chiều ngang và dọc của cửa sổ ImGui
         windowSize.x -= ImGui.getScrollX();
         windowSize.y -= ImGui.getScrollY();
 
@@ -68,8 +75,7 @@ public class GameViewWindow {
         return new ImVec2(aspectWidth, aspectHeight);
     }
 
-    /** Xử lý việc viewport luôn được căn giữa dựa trên kích thước của cửa sổ **/
-    private  ImVec2 getCenteredPositionForViewport(ImVec2 aspectSize) {
+    private ImVec2 getCenteredPositionForViewport(ImVec2 aspectSize) {
         ImVec2 windowSize = new ImVec2();
         ImGui.getContentRegionAvail(windowSize);
         windowSize.x -= ImGui.getScrollX();
@@ -82,4 +88,3 @@ public class GameViewWindow {
                 viewportY + ImGui.getCursorPosY());
     }
 }
-

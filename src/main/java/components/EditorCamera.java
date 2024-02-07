@@ -25,11 +25,8 @@ public class EditorCamera extends Component {
         this.clickOrigin = new Vector2f();
     }
 
-//    Phương thức update được gọi để cập nhật trạng thái của camera
-//    Nếu nút giữa chuột được nhấn và dragDebounce còn thời gian, lấy vị trí bắt đầu kéo
-//    Nếu nút giữa chuột được giữ, tính toán vị trí mới của camera dựa trên sự thay đổi vị trí chuột
     @Override
-    public void update(float dt) {
+    public void editorUpdate(float dt) {
         if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_MIDDLE) && dragDebounce > 0) {
             this.clickOrigin = new Vector2f(MouseListener.getOrthoX(), MouseListener.getOrthoY());
             dragDebounce -= dt;
@@ -40,8 +37,7 @@ public class EditorCamera extends Component {
             levelEditorCamera.position.sub(delta.mul(dt).mul(dragSensitivity));
             this.clickOrigin.lerp(mousePos, dt);
         }
-//           Nếu đã kết thúc thời gian chờ kéo và không giữ nút giữa chuột, reset thời gian chờ
-//           Nếu có sự kiện cuộn chuột, điều chỉnh zoom của camera dựa trên giá trị cuộn
+
         if (dragDebounce <= 0.0f && !MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_MIDDLE)) {
             dragDebounce = 0.1f;
         }
@@ -52,10 +48,6 @@ public class EditorCamera extends Component {
             addValue *= -Math.signum(MouseListener.getScrollY());
             levelEditorCamera.addZoom(addValue);
         }
-
-//        Nếu phím số chấm được nhấn, đặt cờ reset để bắt đầu quá trình đặt lại camera
-//        Nếu đang trong quá trình đặt lại (reset được đặt), di chuyển camera về vị trí và zoom mục tiêu
-//        Reset khi camera đã ở vị trí gần 0 và zoom đã đạt mức 1
 
         if (KeyListener.isKeyPressed(GLFW_KEY_KP_DECIMAL)) {
             reset = true;
