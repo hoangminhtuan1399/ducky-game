@@ -115,6 +115,7 @@ public class Window {
         });
 
         // Make the OpenGL context current
+
         glfwMakeContextCurrent(glfwWindow);
         // Enable v-sync
         glfwSwapInterval(1);
@@ -131,12 +132,13 @@ public class Window {
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-        this.imguiLayer = new ImGuiLayer(glfwWindow);
-        this.imguiLayer.initImGui();
 
         this.framebuffer = new Framebuffer(3840, 2160);
         this.pickingTexture = new PickingTexture(3840, 2160);
-        glViewport(0, 0,3840, 2160);
+        glViewport(0, 0, 3840, 2160);
+
+        this.imguiLayer = new ImGuiLayer(glfwWindow, pickingTexture);
+        this.imguiLayer.initImGui();
 
         Window.changeScene(0);
     }
@@ -158,22 +160,11 @@ public class Window {
             pickingTexture.enableWriting();
 
             glViewport(0, 0, 3840, 2160);
-            // xác định màu để làm nền (màu đen)
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-            // xóa cả color buffer và depth buffer để chuẩn bị cho render mới
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             Renderer.bindShader(pickingShader);
             currentScene.render();
-
-            /** kiểm tra xem nút trái chuột nhấn được không, lấy tọa độ màn hình của chuột
-             *  rồi đọc giá trị pixel(id của đối tượng) từ picking texture
-             *  tại tọa độ c ủa chuột rồi in ra màn hình **/
-            if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
-                int x = (int)MouseListener.getScreenX();
-                int y = (int)MouseListener.getScreenY();
-                System.out.println(pickingTexture.readPixel(x, y));
-            }
 
             pickingTexture.disableWriting();
             glEnable(GL_BLEND);
@@ -195,11 +186,13 @@ public class Window {
 
             this.imguiLayer.update(dt, currentScene);
             glfwSwapBuffers(glfwWindow);
+            MouseListener.endFrame();
 
             endTime = (float)glfwGetTime();
             dt = endTime - beginTime;
             beginTime = endTime;
         }
+
         currentScene.saveExit();
     }
 
@@ -219,11 +212,15 @@ public class Window {
         get().height = newHeight;
     }
 
-    public static Framebuffer getFramebuffer(){
+    public static Framebuffer getFramebuffer() {
         return get().framebuffer;
     }
 
-    public static float getTargetAspectRatio(){
+    public static float getTargetAspectRatio() {
         return 16.0f / 9.0f;
+    }
+
+    public static ImGuiLayer getImguiLayer() {
+        return get().imguiLayer;
     }
 }

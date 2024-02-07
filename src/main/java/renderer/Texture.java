@@ -10,15 +10,16 @@ import static org.lwjgl.stb.STBImage.*;
 
 public class Texture {
     private String filepath;
-    private transient int texID; // tránh tuần tự hóa id kết cấu
+    private transient int texID;
     private int width, height;
 
-    public Texture () {
+    public Texture() {
         texID = -1;
         width = -1;
         height = -1;
     }
-    public Texture (int width, int height) {
+
+    public Texture(int width, int height) {
         this.filepath = "Generated";
 
         // Generate texture on GPU
@@ -95,15 +96,16 @@ public class Texture {
     }
 
     public int getId() {
-        return this.texID;
+        return texID;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) return false;
-        if (!(obj instanceof Texture)) return false;
-        Texture oTex = (Texture)obj;
-        return oTex.getWidth() == this.width && oTex.getHeight() == this.height && oTex.getId() == this.texID &&
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof Texture)) return false;
+        Texture oTex = (Texture)o;
+        return oTex.getWidth() == this.width && oTex.getHeight() == this.height &&
+                oTex.getId() == this.texID &&
                 oTex.getFilepath().equals(this.filepath);
     }
 }

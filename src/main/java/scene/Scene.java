@@ -16,13 +16,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class Scene {
+
     protected Renderer renderer = new Renderer();
     protected Camera camera;
     private boolean isRunning = false;
     protected List<GameObject> gameObjects = new ArrayList<>();
-    protected GameObject activeGameObject = null;
     protected boolean levelLoaded = false;
 
     public Scene() {
@@ -50,23 +51,20 @@ public abstract class Scene {
             this.renderer.add(go);
         }
     }
+//   tạo một luồng từ danh sách gameObjects, và lọc ra những đối tượng có uid (ID) trùng khớp với gameObjectId
+//   trả về Optional chứa phần tử đầu tiên thỏa mãn điều kiện lọc. Nếu không tìm thấy, Optional sẽ rỗng
+    public GameObject getGameObject(int gameObjectId) {
+        Optional<GameObject> result = this.gameObjects.stream()
+                .filter(gameObject -> gameObject.getUid() == gameObjectId)
+                .findFirst();
+        return result.orElse(null);
+    }
 
     public abstract void update(float dt);
-
     public abstract void render();
 
     public Camera camera() {
         return this.camera;
-    }
-
-    public void sceneImgui() {
-        if (activeGameObject != null) {
-            ImGui.begin("Inspector");
-            activeGameObject.imgui();
-            ImGui.end();
-        }
-
-        imgui();
     }
 
     public void imgui() {
@@ -74,19 +72,33 @@ public abstract class Scene {
     }
 
     public void saveExit() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Component.class, new ComponentDeserializer()).registerTypeAdapter(GameObject.class, new GameObjectDeserializer()).create();
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(Component.class, new ComponentDeserializer())
+                .registerTypeAdapter(GameObject.class, new GameObjectDeserializer())
+                .create();
 
         try {
             FileWriter writer = new FileWriter("level.txt");
-            writer.write(gson.toJson(this.gameObjects));
+            List<GameObject> objsToSerialize = new ArrayList<>();
+            for (GameObject obj : this.gameObjects) {
+                if (obj.doSerialization()) {
+                    objsToSerialize.add(obj);
+                }
+            }
+            writer.write(gson.toJson(objsToSerialize));
             writer.close();
-        } catch (IOException e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }
 
     public void load() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Component.class, new ComponentDeserializer()).registerTypeAdapter(GameObject.class, new GameObjectDeserializer()).create();
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(Component.class, new ComponentDeserializer())
+                .registerTypeAdapter(GameObject.class, new GameObjectDeserializer())
+                .create();
 
         String inFile = "";
         try {
@@ -99,16 +111,14 @@ public abstract class Scene {
             int maxGoId = -1;
             int maxCompId = -1;
             GameObject[] objs = gson.fromJson(inFile, GameObject[].class);
-            for (int i = 0; i < objs.length; i++) {
+            for (int i=0; i < objs.length; i++) {
                 addGameObjectToScene(objs[i]);
 
-                /** Đảm bảo rằng max component id luôn lớn nhất */
                 for (Component c : objs[i].getAllComponents()) {
                     if (c.getUid() > maxCompId) {
                         maxCompId = c.getUid();
                     }
                 }
-                /** Đảm bảo rằng max game object id luôn lớn nhất */
                 if (objs[i].getUid() > maxGoId) {
                     maxGoId = objs[i].getUid();
                 }
@@ -122,3 +132,4 @@ public abstract class Scene {
         }
     }
 }
+
