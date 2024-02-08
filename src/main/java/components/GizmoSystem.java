@@ -6,31 +6,30 @@ import jade.Window;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_R;
 
+// Lớp GizmoSystem quản lý hệ thống Gizmo trong chế độ chỉnh sửa.
 public class GizmoSystem extends Component {
-    private Spritesheet gizmos;  // Đối tượng Spritesheet chứa các hình ảnh của các Gizmo
-    private int usingGizmo = 0;  // Biến theo dõi Gizmo nào đang được sử dụng
+    private Spritesheet gizmos; // Spritesheet chứa các Sprite cho Gizmos.
+    private int usingGizmo = 0; // Biến để xác định Gizmo nào đang được sử dụng.
 
-    // Constructor, nhận vào một Spritesheet để khởi tạo đối tượng GizmoSystem
+    // Constructor nhận một Spritesheet để tạo Gizmos.
     public GizmoSystem(Spritesheet gizmoSprites) {
         gizmos = gizmoSprites;
     }
 
-    // Phương thức start() được gọi khi đối tượng được tạo và bắt đầu tồn tại
+    // Phương thức start được gọi khi GizmoSystem được khởi tạo.
     @Override
     public void start() {
-        // Thêm các Gizmo vào đối tượng GameObject
-        // TranslateGizmo sử dụng sprite ở vị trí 1 trong Spritesheet
+        // Thêm Gizmos vào GameObject với các Sprite đã chọn.
         gameObject.addComponent(new TranslateGizmo(gizmos.getSprite(1),
                 Window.getImguiLayer().getPropertiesWindow()));
-        // ScaleGizmo sử dụng sprite ở vị trí 2 trong Spritesheet
         gameObject.addComponent(new ScaleGizmo(gizmos.getSprite(2),
                 Window.getImguiLayer().getPropertiesWindow()));
     }
 
-    // Phương thức update() được gọi trong mỗi frame của trò chơi
+    // Phương thức editorUpdate được gọi trong chế độ chỉnh sửa để cập nhật GizmoSystem.
     @Override
-    public void update(float dt) {
-        // Kiểm tra xem Gizmo nào đang được sử dụng và cập nhật trạng thái của chúng
+    public void editorUpdate(float dt) {
+        // Xác định Gizmo nào đang được sử dụng dựa trên giá trị của biến usingGizmo.
         if (usingGizmo == 0) {
             gameObject.getComponent(TranslateGizmo.class).setUsing();
             gameObject.getComponent(ScaleGizmo.class).setNotUsing();
@@ -39,11 +38,11 @@ public class GizmoSystem extends Component {
             gameObject.getComponent(ScaleGizmo.class).setUsing();
         }
 
-        // Kiểm tra phím được nhấn để chuyển đổi giữa dịch chuyển Gizmo và tỉ lệ Gizmo
-        if (KeyListener.isKeyPressed(GLFW_KEY_E)) { //dịch chuyển
-            usingGizmo = 0;
-        } else if (KeyListener.isKeyPressed(GLFW_KEY_R)) { //tỉ lệ
-            usingGizmo = 1;
+        // Kiểm tra phím được nhấn để chuyển đổi giữa các loại Gizmo.
+        if (KeyListener.isKeyPressed(GLFW_KEY_E)) {
+            usingGizmo = 0; // Chọn TranslateGizmo.
+        } else if (KeyListener.isKeyPressed(GLFW_KEY_R)) {
+            usingGizmo = 1; // Chọn ScaleGizmo.
         }
     }
 }

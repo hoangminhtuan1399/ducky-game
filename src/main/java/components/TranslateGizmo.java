@@ -3,12 +3,14 @@ package components;
 import editor.PropertiesWindow;
 import jade.MouseListener;
 
-public class TranslateGizmo extends Gizmos {
+public class TranslateGizmo extends Gizmo {
+
     public TranslateGizmo(Sprite arrowSprite, PropertiesWindow propertiesWindow) {
         super(arrowSprite, propertiesWindow);
     }
+
     @Override
-    public void update(float dt) {
+    public void editorUpdate(float dt) {
         if (activeGameObject != null) {
             if (xAxisActive && !yAxisActive) {
                 activeGameObject.transform.position.x -= MouseListener.getWorldDx();
@@ -17,6 +19,6 @@ public class TranslateGizmo extends Gizmos {
             }
         }
 
-        super.update(dt);
+        super.editorUpdate(dt);
     }
 }
