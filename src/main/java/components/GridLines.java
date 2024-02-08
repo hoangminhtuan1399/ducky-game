@@ -7,14 +7,17 @@ import org.joml.Vector3f;
 import renderer.DebugDraw;
 import util.Settings;
 
+// Lớp GridLines là một Component để vẽ các đường lưới trong chế độ chỉnh sửa.
 public class GridLines extends Component {
 
+    // Phương thức editorUpdate được gọi trong chế độ chỉnh sửa để cập nhật vẽ đường lưới.
     @Override
     public void editorUpdate(float dt) {
         Camera camera = Window.getScene().camera();
         Vector2f cameraPos = camera.position;
         Vector2f projectionSize = camera.getProjectionSize();
 
+        // Tính toán vị trí và số lượng đường lưới dọc và ngang.
         int firstX = ((int)(cameraPos.x / Settings.GRID_WIDTH) - 1) * Settings.GRID_HEIGHT;
         int firstY = ((int)(cameraPos.y / Settings.GRID_HEIGHT) - 1) * Settings.GRID_HEIGHT;
 
@@ -26,6 +29,8 @@ public class GridLines extends Component {
 
         int maxLines = Math.max(numVtLines, numHzLines);
         Vector3f color = new Vector3f(0.2f, 0.2f, 0.2f);
+
+        // Vẽ các đường lưới dọc và ngang.
         for (int i=0; i < maxLines; i++) {
             int x = firstX + (Settings.GRID_WIDTH * i);
             int y = firstY + (Settings.GRID_HEIGHT * i);

@@ -13,6 +13,7 @@ import physics2d.components.Box2DCollider;
 import physics2d.components.CircleCollider;
 import physics2d.components.Rigidbody2D;
 
+// Lớp quản lý hệ thống vật lý 2D dựa trên thư viện JBox2D.
 public class Physics2D {
     private Vec2 gravity = new Vec2(0, -10.0f);
     private World world = new World(gravity);
@@ -22,6 +23,7 @@ public class Physics2D {
     private int velocityIterations = 8;
     private int positionIterations = 3;
 
+    // Phương thức thêm một đối tượng GameObject vào hệ thống vật lý.
     public void add(GameObject go) {
         Rigidbody2D rb = go.getComponent(Rigidbody2D.class);
         if (rb != null && rb.getRawBody() == null) {
@@ -35,6 +37,7 @@ public class Physics2D {
             bodyDef.fixedRotation = rb.isFixedRotation();
             bodyDef.bullet = rb.isContinuousCollision();
 
+            // Thiết lập loại cơ thể vật lý dựa trên loại cơ thể của Rigidbody2D.
             switch (rb.getBodyType()) {
                 case Kinematic: bodyDef.type = BodyType.KINEMATIC; break;
                 case Static: bodyDef.type = BodyType.STATIC; break;
@@ -45,6 +48,7 @@ public class Physics2D {
             CircleCollider circleCollider;
             Box2DCollider boxCollider;
 
+            // Xác định loại hình dạng của Collider và tạo hình dạng tương ứng.
             if ((circleCollider = go.getComponent(CircleCollider.class)) != null) {
                 shape.setRadius(circleCollider.getRadius());
             } else if ((boxCollider = go.getComponent(Box2DCollider.class)) != null) {
@@ -65,6 +69,7 @@ public class Physics2D {
         }
     }
 
+    // Phương thức hủy một GameObject khỏi hệ thống vật lý.
     public void destroyGameObject(GameObject go) {
         Rigidbody2D rb = go.getComponent(Rigidbody2D.class);
         if (rb != null) {
@@ -75,6 +80,7 @@ public class Physics2D {
         }
     }
 
+    // Phương thức cập nhật trạng thái của hệ thống vật lý trong mỗi frame.
     public void update(float dt) {
         physicsTime += dt;
         if (physicsTime >= 0.0f) {

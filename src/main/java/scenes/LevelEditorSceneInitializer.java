@@ -9,15 +9,25 @@ import physics2dtmp.PhysicsSystem2D;
 import physics2dtmp.rigidbody.Rigidbody2D;
 import util.AssetPool;
 
+/**
+ * Lớp khởi tạo cho cảnh chỉnh sửa cấp độ (Level Editor).
+ */
 public class LevelEditorSceneInitializer extends SceneInitializer {
 
     private Spritesheet sprites;
     private GameObject levelEditorStuff;
 
+    /**
+     * Constructor mặc định.
+     */
     public LevelEditorSceneInitializer() {
-
     }
 
+    /**
+     * Phương thức khởi tạo cảnh.
+     *
+     * @param scene Cảnh được khởi tạo.
+     */
     @Override
     public void init(Scene scene) {
         sprites = AssetPool.getSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png");
@@ -32,6 +42,11 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
         scene.addGameObjectToScene(levelEditorStuff);
     }
 
+    /**
+     * Phương thức tải tài nguyên cần thiết cho cảnh.
+     *
+     * @param scene Cảnh được tải tài nguyên.
+     */
     @Override
     public void loadResources(Scene scene) {
         AssetPool.getShader("assets/shaders/default.glsl");
@@ -54,6 +69,9 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
         }
     }
 
+    /**
+     * Phương thức hiển thị giao diện ImGui cho cảnh chỉnh sửa cấp độ.
+     */
     @Override
     public void imgui() {
         ImGui.begin("Level Editor Stuff");
@@ -70,7 +88,7 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
         ImGui.getStyle().getItemSpacing(itemSpacing);
 
         float windowX2 = windowPos.x + windowSize.x;
-        for (int i=0; i < sprites.size(); i++) {
+        for (int i = 0; i < sprites.size(); i++) {
             Sprite sprite = sprites.getSprite(i);
             float spriteWidth = sprite.getWidth() * 4;
             float spriteHeight = sprite.getHeight() * 4;

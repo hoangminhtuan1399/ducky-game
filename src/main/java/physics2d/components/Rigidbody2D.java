@@ -5,6 +5,7 @@ import org.jbox2d.dynamics.Body;
 import org.joml.Vector2f;
 import physics2d.enums.BodyType;
 
+// Lớp Rigidbody2D là một thành phần đại diện cho cơ thể vật lý 2D trong hệ thống vật lý.
 public class Rigidbody2D extends Component {
     private Vector2f velocity = new Vector2f();
     private float angularDamping = 0.8f;
@@ -17,6 +18,7 @@ public class Rigidbody2D extends Component {
 
     private transient Body rawBody = null;
 
+    // Phương thức update được gọi trong mỗi frame để đồng bộ thông tin của Rigidbody2D với cơ thể vật lý thô.
     @Override
     public void update(float dt) {
         if (rawBody != null) {
@@ -26,6 +28,8 @@ public class Rigidbody2D extends Component {
             this.gameObject.transform.rotation = (float)Math.toDegrees(rawBody.getAngle());
         }
     }
+
+    // Các phương thức getter và setter cho các thuộc tính của Rigidbody2D.
 
     public Vector2f getVelocity() {
         return velocity;
