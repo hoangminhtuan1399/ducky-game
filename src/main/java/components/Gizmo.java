@@ -1,14 +1,11 @@
 package components;
 
 import editor.PropertiesWindow;
-import jade.GameObject;
-import jade.MouseListener;
-import jade.Prefabs;
-import jade.Window;
+import jade.*;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
+import static org.lwjgl.glfw.GLFW.*;
 
 // Lớp Gizmo là một Component để xử lý và vẽ Gizmo trong chế độ chỉnh sửa.
 public class Gizmo extends Component {
@@ -26,12 +23,12 @@ public class Gizmo extends Component {
     protected GameObject activeGameObject = null;
 
     // Vị trí offset của các mũi tên trục X và Y.
-    private Vector2f xAxisOffset = new Vector2f(64, -5);
-    private Vector2f yAxisOffset = new Vector2f(16, 61);
+    private Vector2f xAxisOffset = new Vector2f(24.0f / 80.0f, -6.0f / 80.0f);
+    private Vector2f yAxisOffset = new Vector2f(-7.0f / 80.0f, 21.0f / 80.0f);
 
     // Kích thước của Gizmo.
-    private int gizmoWidth = 16;
-    private int gizmoHeight = 48;
+    private float gizmoWidth = 16.0f / 80.0f;
+    private float gizmoHeight = 48.0f / 80.0f;
 
     // Trạng thái hoạt động của các trục.
     protected boolean xAxisActive = false;
@@ -46,8 +43,8 @@ public class Gizmo extends Component {
     // Constructor nhận một Sprite để tạo mũi tên và PropertiesWindow để lấy thông tin GameObject.
     public Gizmo(Sprite arrowSprite, PropertiesWindow propertiesWindow) {
         // Tạo đối tượng mũi tên X và Y với Sprite đã cho.
-        this.xAxisObject = Prefabs.generateSpriteObject(arrowSprite, 16, 48);
-        this.yAxisObject = Prefabs.generateSpriteObject(arrowSprite, 16, 48);
+        this.xAxisObject = Prefabs.generateSpriteObject(arrowSprite, gizmoWidth, gizmoHeight);
+        this.yAxisObject = Prefabs.generateSpriteObject(arrowSprite, gizmoWidth, gizmoHeight);
 
         // Lấy SpriteRenderer của đối tượng mũi tên.
         this.xAxisSprite = this.xAxisObject.getComponent(SpriteRenderer.class);
@@ -99,6 +96,20 @@ public class Gizmo extends Component {
         if (this.activeGameObject != null) {
             // Nếu có GameObject đang được chọn, đặt trạng thái hoạt động.
             this.setActive();
+
+            // Tạo tổ hợp phím Ctrl + D để duplicate Gizmo
+            if (KeyListener.isKeyPressed(GLFW_KEY_LEFT_CONTROL) && KeyListener.keyBeginPress(GLFW_KEY_D)) {
+                GameObject newObj = this.activeGameObject.copy();
+                Window.getScene().addGameObjectToScene(newObj);
+                newObj.transform.position.add(0.1f, 0.1f);
+                this.propertiesWindow.setActiveGameObject(newObj);
+                return;
+            } else if (KeyListener.isKeyPressed(GLFW_KEY_DELETE)) {
+                activeGameObject.destroy();
+                this.setInactive();
+                this.propertiesWindow.setActiveGameObject(null);
+                return;
+            }
         } else {
             // Nếu không có GameObject đang được chọn, đặt trạng thái không hoạt động.
             this.setInactive();
@@ -146,10 +157,10 @@ public class Gizmo extends Component {
     // Kiểm tra trạng thái hover của mũi tên X.
     private boolean checkXHoverState() {
         Vector2f mousePos = new Vector2f(MouseListener.getOrthoX(), MouseListener.getOrthoY());
-        if (mousePos.x <= xAxisObject.transform.position.x &&
-                mousePos.x >= xAxisObject.transform.position.x - gizmoHeight &&
-                mousePos.y >= xAxisObject.transform.position.y &&
-                mousePos.y <= xAxisObject.transform.position.y + gizmoWidth) {
+        if (mousePos.x <= xAxisObject.transform.position.x + (gizmoHeight / 2.0f) &&
+                mousePos.x >= xAxisObject.transform.position.x - (gizmoWidth / 2.0f) &&
+                mousePos.y >= xAxisObject.transform.position.y - (gizmoHeight / 2.0f) &&
+                mousePos.y <= xAxisObject.transform.position.y + (gizmoWidth / 2.0f)) {
             xAxisSprite.setColor(xAxisColorHover);
             return true;
         }
@@ -161,10 +172,10 @@ public class Gizmo extends Component {
     // Kiểm tra trạng thái hover của mũi tên Y.
     private boolean checkYHoverState() {
         Vector2f mousePos = new Vector2f(MouseListener.getOrthoX(), MouseListener.getOrthoY());
-        if (mousePos.x <= yAxisObject.transform.position.x &&
-                mousePos.x >= yAxisObject.transform.position.x - gizmoWidth &&
-                mousePos.y <= yAxisObject.transform.position.y &&
-                mousePos.y >= yAxisObject.transform.position.y - gizmoHeight) {
+        if (mousePos.x <= yAxisObject.transform.position.x + gizmoWidth / 2.0f &&
+                mousePos.x >= yAxisObject.transform.position.x - gizmoWidth / 2.0f &&
+                mousePos.y <= yAxisObject.transform.position.y + gizmoHeight / 2.0f &&
+                mousePos.y >= yAxisObject.transform.position.y - gizmoHeight / 2.0f) {
             yAxisSprite.setColor(yAxisColorHover);
             return true;
         }
