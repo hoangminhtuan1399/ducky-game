@@ -10,7 +10,7 @@ public class MenuBar {
 
     // Phương thức để vẽ thanh menu chính.
     public void imgui() {
-        ImGui.beginMainMenuBar();
+        ImGui.beginMenuBar();
 
         // Menu "File"
         if (ImGui.beginMenu("File")) {
@@ -27,6 +27,6 @@ public class MenuBar {
             ImGui.endMenu(); // Kết thúc menu "File"
         }
 
-        ImGui.endMainMenuBar(); // Kết thúc thanh menu chính
+        ImGui.endMenuBar(); // Kết thúc thanh menu chính
     }
 }
