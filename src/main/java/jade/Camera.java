@@ -27,7 +27,7 @@ public class Camera {
         projectionMatrix.identity();
         projectionMatrix.ortho(0.0f, projectionSize.x * this.zoom,
                 0.0f, projectionSize.y * zoom, 0.0f, 100.0f);
-        projectionMatrix.invert(inverseProjection);
+        inverseProjection = new Matrix4f(projectionMatrix).invert();
     }
 
     public Matrix4f getViewMatrix() {
@@ -37,7 +37,7 @@ public class Camera {
         viewMatrix = viewMatrix.lookAt(new Vector3f(position.x, position.y, 20.0f),
                 cameraFront.add(position.x, position.y, 0.0f),
                 cameraUp);
-        this.viewMatrix.invert(inverseView);
+        inverseView = new Matrix4f(this.viewMatrix).invert();
         return this.viewMatrix;
     }
 

@@ -47,6 +47,8 @@ public class Spritesheet {
         }
     }
 
+    public List<Sprite> getSprites() { return this.sprites; }
+
     // Phương thức để lấy một Sprite từ danh sách dựa trên chỉ số.
     public Sprite getSprite(int index) {
         return this.sprites.get(index);
