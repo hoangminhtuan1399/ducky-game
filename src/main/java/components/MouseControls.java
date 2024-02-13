@@ -9,6 +9,8 @@ import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 
 public class MouseControls extends Component {
     GameObject holdingObject = null;
+    private float debounceTime = 0.05f;
+    private float debounce = debounceTime;
 
     public void pickupObject(GameObject go) {
         this.holdingObject = go;
@@ -21,11 +23,12 @@ public class MouseControls extends Component {
 
     @Override
     public void editorUpdate(float dt) {
-        if (holdingObject != null) {
-            holdingObject.transform.position.x = MouseListener.getOrthoX();
-            holdingObject.transform.position.y = MouseListener.getOrthoY();
-            holdingObject.transform.position.x = (int)(holdingObject.transform.position.x / Settings.GRID_WIDTH) * Settings.GRID_WIDTH;
-            holdingObject.transform.position.y = (int)(holdingObject.transform.position.y / Settings.GRID_HEIGHT) * Settings.GRID_HEIGHT;
+        debounce -= dt;
+        if (holdingObject != null && debounce <= 0) {
+            holdingObject.transform.position.x = MouseListener.getWorldX();
+            holdingObject.transform.position.y = MouseListener.getWorldY();
+            holdingObject.transform.position.x = ((int)Math.floor(holdingObject.transform.position.x / Settings.GRID_WIDTH) * Settings.GRID_WIDTH) + Settings.GRID_WIDTH / 2.0f;
+            holdingObject.transform.position.y = ((int)Math.floor(holdingObject.transform.position.y / Settings.GRID_HEIGHT) * Settings.GRID_HEIGHT) + Settings.GRID_HEIGHT / 2.0f;
 
             if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
                 place();
