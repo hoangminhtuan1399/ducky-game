@@ -100,18 +100,18 @@ public class Gizmo extends Component {
             this.setActive();
 
             // Tạo tổ hợp phím Ctrl + D để duplicate Gizmo
-            if (KeyListener.isKeyPressed(GLFW_KEY_LEFT_CONTROL) && KeyListener.keyBeginPress(GLFW_KEY_D)) {
-                GameObject newObj = this.activeGameObject.copy();
-                Window.getScene().addGameObjectToScene(newObj);
-                newObj.transform.position.add(0.1f, 0.1f);
-                this.propertiesWindow.setActiveGameObject(newObj);
-                return;
-            } else if (KeyListener.isKeyPressed(GLFW_KEY_DELETE)) {
-                activeGameObject.destroy();
-                this.setInactive();
-                this.propertiesWindow.setActiveGameObject(null);
-                return;
-            }
+//            if (KeyListener.isKeyPressed(GLFW_KEY_LEFT_CONTROL) && KeyListener.keyBeginPress(GLFW_KEY_D)) {
+//                GameObject newObj = this.activeGameObject.copy();
+//                Window.getScene().addGameObjectToScene(newObj);
+//                newObj.transform.position.add(0.1f, 0.1f);
+//                this.propertiesWindow.setActiveGameObject(newObj);
+//                return;
+//            } else if (KeyListener.isKeyPressed(GLFW_KEY_DELETE)) {
+//                activeGameObject.destroy();
+//                this.setInactive();
+//                this.propertiesWindow.setActiveGameObject(null);
+//                return;
+//            }
         } else {
             // Nếu không có GameObject đang được chọn, đặt trạng thái không hoạt động.
             this.setInactive();
