@@ -83,6 +83,8 @@ public class Gizmo extends Component {
         if (using) {
             this.setInactive();
         }
+        this.xAxisObject.getComponent(SpriteRenderer.class).setColor(new Vector4f(0, 0, 0, 0));
+        this.yAxisObject.getComponent(SpriteRenderer.class).setColor(new Vector4f(0, 0, 0, 0));
     }
 
     // Phương thức editorUpdate được gọi trong chế độ chỉnh sửa để cập nhật Gizmo.
