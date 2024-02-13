@@ -29,7 +29,7 @@ public class PropertiesWindow {
         debounce -= dt;
 
         // Kiểm tra xem nút chuột trái có được nhấn và debounce đã hết hay chưa.
-        if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && debounce < 0) {
+        if (!MouseListener.isDragging() && MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && debounce < 0) {
             int x = (int)MouseListener.getScreenX();
             int y = (int)MouseListener.getScreenY();
 
@@ -92,5 +92,9 @@ public class PropertiesWindow {
     // Phương thức đặt đối tượng đang chọn.
     public void setActiveGameObject(GameObject go) {
         this.activeGameObject = go;
+    }
+
+    public PickingTexture getPickingTexture() {
+        return this.pickingTexture;
     }
 }
