@@ -131,6 +131,7 @@ public class Window implements Observer {
         String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
         audioDevice = alcOpenDevice(defaultDeviceName);
 
+                // ngữ cảnh cho âm thanh
         int[] attributes = {0};
         audioContext = alcCreateContext(audioDevice, attributes);
         alcMakeContextCurrent(audioContext);
