@@ -10,10 +10,15 @@ import physics2d.components.Rigidbody2D;
 import renderer.PickingTexture;
 import scenes.Scene;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 
 // Lớp PropertiesWindow quản lý cửa sổ hiển thị thuộc tính và tương tác với đối tượng trong trò chơi.
 public class PropertiesWindow {
+    //thêm để chọn nhiều block
+    private List<GameObject> activeGameObjects;
     private GameObject activeGameObject = null;
     private PickingTexture pickingTexture;
 
@@ -21,36 +26,16 @@ public class PropertiesWindow {
 
     // Constructor nhận vào một PickingTexture để đọc thông tin pixel từ texture.
     public PropertiesWindow(PickingTexture pickingTexture) {
+        this.activeGameObjects = new ArrayList<>();
         this.pickingTexture = pickingTexture;
-    }
-
-    // Phương thức cập nhật, được gọi trong mỗi frame để kiểm tra sự kiện click chuột và chọn đối tượng.
-    public void update(float dt, Scene currentScene) {
-        debounce -= dt;
-
-        // Kiểm tra xem nút chuột trái có được nhấn và debounce đã hết hay chưa.
-        if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && debounce < 0) {
-            int x = (int)MouseListener.getScreenX();
-            int y = (int)MouseListener.getScreenY();
-
-            // Đọc giá trị pixel từ texture để xác định đối tượng được chọn.
-            int gameObjectId = pickingTexture.readPixel(x, y);
-            GameObject pickedObj = currentScene.getGameObject(gameObjectId);
-
-            // Kiểm tra xem đối tượng đã chọn có tồn tại và không phải là đối tượng không thể chọn.
-            if (pickedObj != null && pickedObj.getComponent(NonPickable.class) == null) {
-                activeGameObject = pickedObj;
-            } else if (pickedObj == null && !MouseListener.isDragging()) {
-                // Nếu không có đối tượng nào được chọn và không có sự kéo thả, đặt đối tượng đang chọn là null.
-                activeGameObject = null;
-            }
-            this.debounce = 0.2f; // Đặt lại debounce để tránh nhận nhiều sự kiện click liên tiếp.
-        }
     }
 
     // Phương thức hiển thị giao diện người dùng cho cửa sổ thuộc tính của đối tượng.
     public void imgui() {
-        if (activeGameObject != null) {
+        // có thể có nhiều đối tượng đc chọn
+        if (activeGameObjects.size() == 1 && activeGameObjects.get(0) != null) {
+
+            activeGameObject = activeGameObjects.get(0);
             ImGui.begin("Properties");
 
             // Hiển thị menu ngữ cảnh để thêm các thành phần mới cho đối tượng.
@@ -86,11 +71,33 @@ public class PropertiesWindow {
 
     // Phương thức trả về đối tượng đang chọn.
     public GameObject getActiveGameObject() {
-        return this.activeGameObject;
+        return activeGameObjects.size() == 1 ? this.activeGameObjects.get(0) :
+                null;
+    }
+
+    // Phương thức trả về nhiều đối tượng đang chọn.
+    public List<GameObject> getActiveGameObjects() {
+        return this.activeGameObjects;
+    }
+
+    public void clearSelected() {
+        this.activeGameObjects.clear();
     }
 
     // Phương thức đặt đối tượng đang chọn.
     public void setActiveGameObject(GameObject go) {
-        this.activeGameObject = go;
+        if (go != null) {
+            clearSelected();
+            this.activeGameObjects.add(go);
+        }
+    }
+
+    // Phương thức thêm đối tượng.
+    public void addActiveGameObject(GameObject go) {
+        this.activeGameObjects.add(go);
+    }
+
+    public PickingTexture getPickingTexture() {
+        return this.pickingTexture;
     }
 }

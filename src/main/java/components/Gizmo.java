@@ -83,6 +83,8 @@ public class Gizmo extends Component {
         if (using) {
             this.setInactive();
         }
+        this.xAxisObject.getComponent(SpriteRenderer.class).setColor(new Vector4f(0, 0, 0, 0));
+        this.yAxisObject.getComponent(SpriteRenderer.class).setColor(new Vector4f(0, 0, 0, 0));
     }
 
     // Phương thức editorUpdate được gọi trong chế độ chỉnh sửa để cập nhật Gizmo.
@@ -98,18 +100,18 @@ public class Gizmo extends Component {
             this.setActive();
 
             // Tạo tổ hợp phím Ctrl + D để duplicate Gizmo
-            if (KeyListener.isKeyPressed(GLFW_KEY_LEFT_CONTROL) && KeyListener.keyBeginPress(GLFW_KEY_D)) {
-                GameObject newObj = this.activeGameObject.copy();
-                Window.getScene().addGameObjectToScene(newObj);
-                newObj.transform.position.add(0.1f, 0.1f);
-                this.propertiesWindow.setActiveGameObject(newObj);
-                return;
-            } else if (KeyListener.isKeyPressed(GLFW_KEY_DELETE)) {
-                activeGameObject.destroy();
-                this.setInactive();
-                this.propertiesWindow.setActiveGameObject(null);
-                return;
-            }
+//            if (KeyListener.isKeyPressed(GLFW_KEY_LEFT_CONTROL) && KeyListener.keyBeginPress(GLFW_KEY_D)) {
+//                GameObject newObj = this.activeGameObject.copy();
+//                Window.getScene().addGameObjectToScene(newObj);
+//                newObj.transform.position.add(0.1f, 0.1f);
+//                this.propertiesWindow.setActiveGameObject(newObj);
+//                return;
+//            } else if (KeyListener.isKeyPressed(GLFW_KEY_DELETE)) {
+//                activeGameObject.destroy();
+//                this.setInactive();
+//                this.propertiesWindow.setActiveGameObject(null);
+//                return;
+//            }
         } else {
             // Nếu không có GameObject đang được chọn, đặt trạng thái không hoạt động.
             this.setInactive();
@@ -156,7 +158,7 @@ public class Gizmo extends Component {
 
     // Kiểm tra trạng thái hover của mũi tên X.
     private boolean checkXHoverState() {
-        Vector2f mousePos = new Vector2f(MouseListener.getOrthoX(), MouseListener.getOrthoY());
+        Vector2f mousePos = new Vector2f(MouseListener.getWorldX(), MouseListener.getWorldY());
         if (mousePos.x <= xAxisObject.transform.position.x + (gizmoHeight / 2.0f) &&
                 mousePos.x >= xAxisObject.transform.position.x - (gizmoWidth / 2.0f) &&
                 mousePos.y >= xAxisObject.transform.position.y - (gizmoHeight / 2.0f) &&
@@ -171,7 +173,7 @@ public class Gizmo extends Component {
 
     // Kiểm tra trạng thái hover của mũi tên Y.
     private boolean checkYHoverState() {
-        Vector2f mousePos = new Vector2f(MouseListener.getOrthoX(), MouseListener.getOrthoY());
+        Vector2f mousePos = new Vector2f(MouseListener.getWorldX(), MouseListener.getWorldY());
         if (mousePos.x <= yAxisObject.transform.position.x + gizmoWidth / 2.0f &&
                 mousePos.x >= yAxisObject.transform.position.x - gizmoWidth / 2.0f &&
                 mousePos.y <= yAxisObject.transform.position.y + gizmoHeight / 2.0f &&

@@ -40,6 +40,10 @@ public class ImGuiLayer {
         this.sceneHeirarchyWindow = new SceneHierarchyWindow();
     }
 
+    public GameViewWindow getGameViewWindow() {
+        return this.gameViewWindow;
+    }
+
     // Initialize Dear ImGui.
     public void initImGui() {
         // IMPORTANT!!
@@ -98,13 +102,17 @@ public class ImGuiLayer {
 
             if (!io.getWantCaptureMouse() || gameViewWindow.getWantCaptureMouse()) {
                 MouseListener.mouseButtonCallback(w, button, action, mods);
+            } else {
+                MouseListener.clear();
             }
         });
 
         glfwSetScrollCallback(glfwWindow, (w, xOffset, yOffset) -> {
             io.setMouseWheelH(io.getMouseWheelH() + (float) xOffset);
             io.setMouseWheel(io.getMouseWheel() + (float) yOffset);
-            MouseListener.mouseScrollCallback(w, xOffset, yOffset);
+            if (!io.getWantCaptureMouse() || gameViewWindow.getWantCaptureMouse()) {
+                MouseListener.mouseScrollCallback(w, xOffset, yOffset);
+            }
         });
 
         io.setSetClipboardTextFn(new ImStrConsumer() {
@@ -157,7 +165,6 @@ public class ImGuiLayer {
         currentScene.imgui();
         //ImGui.showDemoWindow();
         gameViewWindow.imgui();
-        propertiesWindow.update(dt, currentScene);
         propertiesWindow.imgui();
         sceneHeirarchyWindow.imgui();
 
