@@ -1,12 +1,18 @@
 package physics2d.components;
 
 import components.Component;
+import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.joml.Vector2f;
 import physics2d.enums.BodyType;
 
 // Lớp Rigidbody2D là một thành phần đại diện cho cơ thể vật lý 2D trong hệ thống vật lý.
 public class Rigidbody2D extends Component {
+    public float angularVelocity = 0.0f;
+    public float gravityScale = 1.0f;
+    public float friction = 1.0f;
+
+    private boolean isSensor = false;
     private Vector2f velocity = new Vector2f();
     private float angularDamping = 0.8f;
     private float linearDamping = 0.9f;
@@ -31,12 +37,62 @@ public class Rigidbody2D extends Component {
 
     // Các phương thức getter và setter cho các thuộc tính của Rigidbody2D.
 
+    public void addVelocity(Vector2f forceToAdd) {
+        if (rawBody != null) {
+            rawBody.applyForceToCenter(new Vec2(velocity.x, velocity.y));
+        }
+    }
+
+    public void addImpulse(Vector2f impulse){
+        if (rawBody != null) {
+            rawBody.applyLinearImpulse(new Vec2(velocity.x, velocity.y), rawBody.getWorldCenter());
+        }
+    }
     public Vector2f getVelocity() {
         return velocity;
     }
 
     public void setVelocity(Vector2f velocity) {
-        this.velocity = velocity;
+        this.velocity.set(velocity);
+        if (rawBody != null){
+            this.rawBody.setLinearVelocity(new Vec2(velocity.x, velocity.y));
+        }
+    }
+
+    public void setAngularVelocity(float angularVelocity){
+        this.angularVelocity = angularVelocity;
+        if (rawBody != null){
+            this.rawBody.setAngularVelocity(angularVelocity);
+        }
+    }
+
+    public void setGravityScale(float gravityScale){
+        this.gravityScale = gravityScale;
+        if (rawBody != null){
+            this.rawBody.setGravityScale(gravityScale);
+        }
+    }
+
+    public void setIsSensor(){
+        isSensor = true;
+        if (rawBody != null){
+            jade.Window.getPhysics().setIsSensor(this);
+        }
+    }
+
+    public void setNotSensor(){
+        isSensor = true;
+        if (rawBody != null){
+            jade.Window.getPhysics().setNotSensor(this);
+        }
+    }
+
+    public float getFriction(){
+        return this.friction;
+    }
+
+    public boolean isSensor(){
+        return this.isSensor;
     }
 
     public float getAngularDamping() {
@@ -94,4 +150,5 @@ public class Rigidbody2D extends Component {
     public void setRawBody(Body rawBody) {
         this.rawBody = rawBody;
     }
+
 }

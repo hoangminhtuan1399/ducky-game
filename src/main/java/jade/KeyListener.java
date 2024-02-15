@@ -1,5 +1,7 @@
 package jade;
 
+import java.util.Arrays;
+
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
@@ -10,6 +12,10 @@ public class KeyListener {
 
     private KeyListener() {
 
+    }
+
+    public static void endFrame() {
+        Arrays.fill(get().keyBeginPressed, false);
     }
 
     public static KeyListener get() {
@@ -35,13 +41,6 @@ public class KeyListener {
     }
 
     public static boolean keyBeginPress(int keyCode) {
-        /** Check xem phím được truyền vào có đang được ấn hay không */
-        boolean result = get().keyBeginPressed[keyCode];
-
-        /** Set về false để tránh trả về true khi giữ phím */
-        if (result) {
-            get().keyBeginPressed[keyCode] = false;
-        }
-        return result;
+        return get().keyBeginPressed[keyCode];
     }
 }

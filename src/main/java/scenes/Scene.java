@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import components.Component;
 import components.ComponentDeserializer;
-import imgui.ImGui;
 import jade.Camera;
 import jade.GameObject;
 import jade.GameObjectDeserializer;
@@ -45,6 +44,10 @@ public class Scene {
         this.renderer = new Renderer();
         this.gameObjects = new ArrayList<>();
         this.isRunning = false;
+    }
+
+    public Physics2D getPhysics() {
+        return this.physics2D;
     }
 
     /**
