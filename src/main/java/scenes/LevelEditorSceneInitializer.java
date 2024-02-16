@@ -70,7 +70,7 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
         AssetPool.addSpritesheet("assets/images/bigSpritesheet.png",
                 new Spritesheet(AssetPool.getTexture("assets/images/bigSpritesheet.png"),
                         16, 32, 42, 0));
-        AssetPool.addSpritesheet("assets/images/pipes.png",
+        AssetPool.addSpritesheet("assets/images/spritesheets/pipes.png",
                 new Spritesheet(AssetPool.getTexture("assets/images/spritesheets/pipes.png"),
                         32, 32, 4, 0));
         AssetPool.addSpritesheet("assets/images/items.png",
@@ -153,7 +153,7 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
                         object.addComponent(b2d);
                         object.addComponent(new Ground());
                         if (i == 12) {
-                            //object.addComponent(new BreakableBrick());
+                            object.addComponent(new BreakableBrick());
                         }
                         levelEditorStuff.getComponent(MouseControls.class).pickupObject(object);
                     }
