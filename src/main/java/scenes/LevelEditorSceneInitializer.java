@@ -71,7 +71,7 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
                 new Spritesheet(AssetPool.getTexture("assets/images/bigSpritesheet.png"),
                         16, 32, 42, 0));
         AssetPool.addSpritesheet("assets/images/pipes.png",
-                new Spritesheet(AssetPool.getTexture("assets/images/pipes.png"),
+                new Spritesheet(AssetPool.getTexture("assets/images/spritesheets/pipes.png"),
                         32, 32, 4, 0));
         AssetPool.addSpritesheet("assets/images/items.png",
                 new Spritesheet(AssetPool.getTexture("assets/images/items.png"),
