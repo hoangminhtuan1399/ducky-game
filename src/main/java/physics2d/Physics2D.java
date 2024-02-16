@@ -9,6 +9,7 @@ import org.jbox2d.dynamics.*;
 import org.joml.Vector2f;
 import physics2d.components.Box2DCollider;
 import physics2d.components.CircleCollider;
+import physics2d.components.PillboxCollider;
 import physics2d.components.Rigidbody2D;
 
 // Lớp quản lý hệ thống vật lý 2D dựa trên thư viện JBox2D.
@@ -20,6 +21,14 @@ public class Physics2D {
     private float physicsTimeStep = 1.0f / 60.0f;
     private int velocityIterations = 8;
     private int positionIterations = 3;
+
+    public Physics2D() {
+        world.setContactListener(new JadeContactListener());
+    }
+
+    public Vector2f getGravity() {
+        return new Vector2f(world.getGravity().x, world.getGravity().y);
+    }
 
     // Phương thức thêm một đối tượng GameObject vào hệ thống vật lý.
     public void add(GameObject go) {
@@ -51,6 +60,7 @@ public class Physics2D {
 
             CircleCollider circleCollider;
             Box2DCollider boxCollider;
+            PillboxCollider pillboxCollider;
 
             // Xác định loại hình dạng của Collider và tạo hình dạng tương ứng.
             if ((circleCollider = go.getComponent(CircleCollider.class)) != null) {
@@ -59,6 +69,10 @@ public class Physics2D {
 
             if ((boxCollider = go.getComponent(Box2DCollider.class)) != null) {
                 addBox2DCollider(rb, boxCollider);
+            }
+
+            if ((pillboxCollider = go.getComponent(PillboxCollider.class)) != null) {
+                addPillboxCollider(rb, pillboxCollider);
             }
         }
     }
@@ -105,6 +119,7 @@ public class Physics2D {
         }
     }
 
+    //Xóa các vật thể hiện tại, thêm lại một vật thể hình mới và đặt lại dữ liệu
     public void resetCircleCollider(Rigidbody2D rb, CircleCollider circleCollider) {
         Body body = rb.getRawBody();
         if (body == null) return;
@@ -118,6 +133,7 @@ public class Physics2D {
         body.resetMassData();
     }
 
+    //Xóa các vật thể hiện tại, thêm lại một vật thể hình mới và đặt lại dữ liệu
     public void resetBox2DCollider(Rigidbody2D rb, Box2DCollider boxCollider) {
         Body body = rb.getRawBody();
         if (body == null) return;
@@ -129,6 +145,28 @@ public class Physics2D {
 
         addBox2DCollider(rb, boxCollider);
         body.resetMassData();
+    }
+
+    public void resetPillboxCollider(Rigidbody2D rb, PillboxCollider pb) {
+        Body body = rb.getRawBody();
+        if (body == null) return;
+
+        int size = fixtureListSize(body);
+        for (int i = 0; i < size; i++) {
+            body.destroyFixture(body.getFixtureList());
+        }
+
+        addPillboxCollider(rb, pb);
+        body.resetMassData();
+    }
+
+    public void addPillboxCollider(Rigidbody2D rb, PillboxCollider pb) {
+        Body body = rb.getRawBody();
+        assert body != null : "Raw body must not be null";
+
+        addBox2DCollider(rb, pb.getBox());
+        addCircleCollider(rb, pb.getTopCircle());
+        addCircleCollider(rb, pb.getBottomCircle());
     }
 
     public void addBox2DCollider(Rigidbody2D rb, Box2DCollider boxCollider) {
@@ -175,5 +213,9 @@ public class Physics2D {
             fixture = fixture.m_next;
         }
         return size;
+    }
+
+    public boolean isLocked() {
+        return world.isLocked();
     }
 }

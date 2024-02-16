@@ -26,7 +26,7 @@ public class PropertiesWindow {
     public PropertiesWindow(PickingTexture pickingTexture) {
         this.activeGameObjects = new ArrayList<>();
         this.pickingTexture = pickingTexture;
-        this.activeGameObjects = new ArrayList<>();
+        this.activeGameObjectOgColor = new ArrayList<>();
     }
 
     // Phương thức hiển thị giao diện người dùng cho cửa sổ thuộc tính của đối tượng.
