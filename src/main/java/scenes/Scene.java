@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import components.Component;
 import components.ComponentDeserializer;
-import imgui.ImGui;
 import jade.Camera;
 import jade.GameObject;
 import jade.GameObjectDeserializer;
@@ -30,6 +29,7 @@ public class Scene {
     private Camera camera;
     private boolean isRunning;
     private List<GameObject> gameObjects;
+    private List<GameObject> pendingObjects;
     private Physics2D physics2D;
 
     private SceneInitializer sceneInitializer;
@@ -44,7 +44,12 @@ public class Scene {
         this.physics2D = new Physics2D();
         this.renderer = new Renderer();
         this.gameObjects = new ArrayList<>();
+        this.pendingObjects = new ArrayList<>();
         this.isRunning = false;
+    }
+
+    public Physics2D getPhysics() {
+        return this.physics2D;
     }
 
     /**
@@ -82,6 +87,7 @@ public class Scene {
             go.start();
             this.renderer.add(go);
             this.physics2D.add(go);
+            pendingObjects.add(go);
         }
     }
 
@@ -135,6 +141,14 @@ public class Scene {
                 i--;
             }
         }
+
+        for (GameObject go : pendingObjects) {
+            gameObjects.add(go);
+            go.start();
+            this.renderer.add(go);
+            this.physics2D.add(go);
+        }
+        pendingObjects.clear();
     }
 
     /**
@@ -157,6 +171,14 @@ public class Scene {
                 i--;
             }
         }
+
+        for (GameObject go : pendingObjects) {
+            gameObjects.add(go);
+            go.start();
+            this.renderer.add(go);
+            this.physics2D.add(go);
+        }
+        pendingObjects.clear();
     }
 
     /**
@@ -203,6 +225,7 @@ public class Scene {
                 .setPrettyPrinting()
                 .registerTypeAdapter(Component.class, new ComponentDeserializer())
                 .registerTypeAdapter(GameObject.class, new GameObjectDeserializer())
+                .enableComplexMapKeySerialization()
                 .create();
 
         try {
@@ -228,6 +251,7 @@ public class Scene {
                 .setPrettyPrinting()
                 .registerTypeAdapter(Component.class, new ComponentDeserializer())
                 .registerTypeAdapter(GameObject.class, new GameObjectDeserializer())
+                .enableComplexMapKeySerialization()
                 .create();
 
         String inFile = "";
