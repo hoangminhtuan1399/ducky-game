@@ -10,7 +10,7 @@ import physics2d.Physics2D;
 import physics2d.components.PillboxCollider;
 import physics2d.components.Rigidbody2D;
 import physics2d.enums.BodyType;
-import scenes.LevelEditorSceneInitializer;
+import scenes.LevelSceneInitializer;
 import util.AssetPool;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -74,7 +74,7 @@ public class PlayerController extends Component {
                 this.rb.setVelocity(this.velocity);
                 this.rb.setAngularVelocity(0);
             } else if (!deadGoingUp && gameObject.transform.position.y <= deadMinHeight) {
-                Window.changeScene(new LevelEditorSceneInitializer());
+                Window.changeScene(new LevelSceneInitializer());
             }
             return;
         }
@@ -179,6 +179,11 @@ public class PlayerController extends Component {
         onGround = Physics2D.checkOnGround(this.gameObject, innerPlayerWidth, yVal);
     }
 
+    public void setPosition(Vector2f newPos) {
+        this.gameObject.transform.position.set(newPos);
+        this.rb.setPosition(newPos);
+    }
+
     public void powerup() {
         if (playerState == PlayerState.Small) {
             playerState = PlayerState.Big;
@@ -259,6 +264,11 @@ public class PlayerController extends Component {
             AssetPool.getSound("assets/sounds/pipe.ogg").play();
         }
     }
+
+    public boolean hasWon() {
+        return false;
+    }
+
 
     public boolean isSmall() {
         return this.playerState == PlayerState.Small;
