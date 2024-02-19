@@ -100,6 +100,16 @@ public class Scene {
         }
     }
 
+    public <T extends Component> GameObject getGameObjectWith(Class<T> clazz) {
+        for (GameObject go : gameObjects) {
+            if (go.getComponent(clazz) != null) {
+                return go;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Lấy danh sách các đối tượng trò chơi trong cảnh.
      *
@@ -149,6 +159,13 @@ public class Scene {
             this.physics2D.add(go);
         }
         pendingObjects.clear();
+    }
+
+    public GameObject getGameObject(String gameObjectName) {
+        Optional<GameObject> result = this.gameObjects.stream()
+                .filter(gameObject -> gameObject.name.equals(gameObjectName))
+                .findFirst();
+        return result.orElse(null);
     }
 
     /**
