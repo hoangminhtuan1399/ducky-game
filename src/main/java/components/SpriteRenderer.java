@@ -1,7 +1,6 @@
 package components;
 
 import editor.JImGui;
-import imgui.ImGui;
 import jade.Transform;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -42,7 +41,7 @@ public class SpriteRenderer extends Component {
 
     @Override
     public void imgui() {
-        if (JImGui.colorPicker4("Color Pickier", this.color)) {
+        if (JImGui.colorPicker4("Color Picker", this.color)) {
             this.isDirty = true;
         }
     }
