@@ -6,14 +6,11 @@ import jade.Prefabs;
 import jade.Window;
 import org.jbox2d.dynamics.contacts.Contact;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 import physics2d.Physics2D;
-import physics2d.RaycastInfo;
 import physics2d.components.PillboxCollider;
 import physics2d.components.Rigidbody2D;
 import physics2d.enums.BodyType;
-import renderer.DebugDraw;
 import scenes.LevelEditorSceneInitializer;
 import scenes.LevelSceneInitializer;
 import util.AssetPool;
@@ -91,7 +88,14 @@ public class PlayerController extends Component {
                 walkTime -= dt;
 
                 if (timeToCastle <= 0) {
-                    Window.changeScene(new LevelEditorSceneInitializer());
+                    if (Window.RELEASE_BUILD) {
+                        // NOTE: Just infinitely loop. If you wanted additional levels
+                        //       you could set up some state to figure out which level
+                        //       is next and then load that in the LevelSceneInitializer
+                        Window.changeScene(new LevelSceneInitializer());
+                    } else {
+                        Window.changeScene(new LevelEditorSceneInitializer());
+                    }
                 }
             }
 
@@ -242,7 +246,7 @@ public class PlayerController extends Component {
             if (pb != null) {
                 jumpBoost *= bigJumpBoostFactor;
                 walkSpeed *= bigJumpBoostFactor;
-                pb.setHeight(0.63f);
+                pb.setHeight(0.42f);
             }
         } else if (playerState == PlayerState.Big) {
             playerState = PlayerState.Fire;
@@ -261,6 +265,7 @@ public class PlayerController extends Component {
             rb.setIsSensor();
             rb.setBodyType(BodyType.Static);
             gameObject.transform.position.x = flagpole.transform.position.x;
+            AssetPool.getSound("assets/sounds/main-theme-overworld.ogg").stop();
             AssetPool.getSound("assets/sounds/flagpole.ogg").play();
         }
     }
@@ -305,6 +310,7 @@ public class PlayerController extends Component {
             this.rb.setVelocity(new Vector2f());
             this.isDead = true;
             this.rb.setIsSensor();
+            AssetPool.getSound("assets/sounds/main-theme-overworld.ogg").stop();
             AssetPool.getSound("assets/sounds/mario_die.ogg").play();
             deadMaxHeight = this.gameObject.transform.position.y + 0.3f;
             this.rb.setBodyType(BodyType.Static);
@@ -318,7 +324,7 @@ public class PlayerController extends Component {
             if (pb != null) {
                 jumpBoost /= bigJumpBoostFactor;
                 walkSpeed /= bigJumpBoostFactor;
-                pb.setHeight(0.31f);
+                pb.setHeight(0.25f);
             }
             hurtInvincibilityTimeLeft = hurtInvincibilityTime;
             AssetPool.getSound("assets/sounds/pipe.ogg").play();
