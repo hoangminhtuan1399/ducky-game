@@ -15,7 +15,6 @@ public class MouseListener {
     private double xPos, yPos, lastY, lastX, worldX, worldY, lastWorldX, lastWorldY;
     private boolean mouseButtonPressed[] = new boolean[9];
     private boolean isDragging;
-
     private int mouseButtonDown = 0;
 
     private Vector2f gameViewportPos = new Vector2f();
@@ -30,23 +29,6 @@ public class MouseListener {
         this.lastY = 0.0;
     }
 
-    public static void endFrame() {
-        get().scrollY = 0.0;
-        get().scrollX = 0.0;
-    }
-
-    public static void clear() {
-        get().scrollX = 0.0;
-        get().scrollY = 0.0;
-        get().xPos = 0.0;
-        get().yPos = 0.0;
-        get().lastX = 0.0;
-        get().lastY = 0.0;
-        get().mouseButtonDown = 0;
-        get().isDragging = false;
-        Arrays.fill(get().mouseButtonPressed, false);
-    }
-
     public static MouseListener get() {
         if (MouseListener.instance == null) {
             MouseListener.instance = new MouseListener();
@@ -56,22 +38,26 @@ public class MouseListener {
     }
 
     public static void mousePosCallback(long window, double xpos, double ypos) {
-        if (!Window.RELEASE_BUILD) {
-            if (!Window.getImguiLayer().getGameViewWindow().getWantCaptureMouse()) {
-                clear();
-            }
+        if (!Window.getImguiLayer().getGameViewWindow().getWantCaptureMouse()) {
+            clear();
         }
-
         if (get().mouseButtonDown > 0) {
             get().isDragging = true;
         }
-
         get().lastX = get().xPos;
         get().lastY = get().yPos;
         get().lastWorldX = get().worldX;
         get().lastWorldY = get().worldY;
-        get().xPos = xpos;
-        get().yPos = ypos;
+
+        // Chuyển đổi tọa độ chuột của màn hình thành tọa độ thế giới trong GameViewport
+        get().xPos = xpos - get().gameViewportPos.x;
+        get().yPos = ypos - get().gameViewportPos.y;
+
+        float aspectRatio = 1485f / 642f;
+        get().xPos *= aspectRatio;
+
+        get().worldX = (2.0f * (get().xPos / get().gameViewportSize.x)) - 1.0f;
+        get().worldY = (2.0f * (1.0f - (get().yPos / get().gameViewportSize.y))) - 1;
     }
 
     public static void mouseButtonCallback(long window, int button, int action, int mods) {
@@ -96,29 +82,50 @@ public class MouseListener {
         get().scrollY = yOffset;
     }
 
+    public static void endFrame() {
+        get().scrollX = 0;
+        get().scrollY = 0;
+    }
+
+    public static void clear() {
+        get().scrollX = 0.0;
+        get().scrollY = 0.0;
+        get().xPos = 0.0;
+        get().yPos = 0.0;
+        get().lastX = 0.0;
+        get().lastY = 0.0;
+        get().mouseButtonDown = 0;
+        get().isDragging = false;
+        Arrays.fill(get().mouseButtonPressed, false);
+    }
+
     public static float getX() {
-        return (float)get().xPos;
+        return (float) get().xPos;
     }
 
     public static float getY() {
-        return (float)get().yPos;
+        return (float) get().yPos;
     }
 
     public static float getWorldDx() {
-        return (float)(get().lastWorldX - get().worldX);
+        return (float) (get().lastWorldX - get().worldX);
     }
 
     public static float getWorldDy() {
-        return (float)(get().lastWorldY - get().worldY);
+        return (float) (get().lastWorldY - get().worldY);
     }
 
-    public static float getScrollX() { return (float)get().scrollX; }
+    public static float getScrollX() {
+        return (float) get().scrollX;
+    }
 
     public static float getScrollY() {
-        return (float)get().scrollY;
+        return (float) get().scrollY;
     }
 
-    public static boolean isDragging() { return get().isDragging; }
+    public static boolean isDragging() {
+        return get().isDragging;
+    }
 
     public static boolean mouseButtonDown(int button) {
         if (button < get().mouseButtonPressed.length) {
@@ -126,6 +133,22 @@ public class MouseListener {
         } else {
             return false;
         }
+    }
+
+    public static float getScreenX() {
+        return getScreen().x;
+    }
+
+    public static float getScreenY() {
+        return getScreen().y;
+    }
+
+    public static Vector2f getScreen() {
+        float currentX = getX() - get().gameViewportPos.x;
+        currentX = (currentX / get().gameViewportSize.x) * 1280.0f;
+        float currentY = (getY() - get().gameViewportPos.y);
+        currentY = (1.0f - (currentY / get().gameViewportSize.y)) * 720.0f;
+        return new Vector2f(currentX, currentY);
     }
 
     public static float getWorldX() {
@@ -141,12 +164,13 @@ public class MouseListener {
         currentX = (2.0f * (currentX / get().gameViewportSize.x)) - 1.0f;
         float currentY = (getY() - get().gameViewportPos.y);
         currentY = (2.0f * (1.0f - (currentY / get().gameViewportSize.y))) - 1;
+        Vector4f tmp = new Vector4f(currentX, currentY, 0, 1);
 
         Camera camera = Window.getScene().camera();
-        Vector4f tmp = new Vector4f(currentX, currentY, 0, 1);
         Matrix4f inverseView = new Matrix4f(camera.getInverseView());
         Matrix4f inverseProjection = new Matrix4f(camera.getInverseProjection());
         tmp.mul(inverseView.mul(inverseProjection));
+
         return new Vector2f(tmp.x, tmp.y);
     }
 
@@ -157,8 +181,7 @@ public class MouseListener {
         );
         normalizedScreenCords.mul(2.0f).sub(new Vector2f(1.0f, 1.0f));
         Camera camera = Window.getScene().camera();
-        Vector4f tmp = new Vector4f(normalizedScreenCords.x, normalizedScreenCords.y,
-                0, 1);
+        Vector4f tmp = new Vector4f(normalizedScreenCords.x, normalizedScreenCords.y, 0, 1);
         Matrix4f inverseView = new Matrix4f(camera.getInverseView());
         Matrix4f inverseProjection = new Matrix4f(camera.getInverseProjection());
         tmp.mul(inverseView.mul(inverseProjection));
@@ -178,23 +201,11 @@ public class MouseListener {
         return windowSpace;
     }
 
-    public static float getScreenX() {
-        return getScreen().x;
-    }
 
-    public static float getScreenY() {
-        return getScreen().y;
-    }
 
-    public static Vector2f getScreen() {
-        float currentX = getX() - get().gameViewportPos.x;
-        currentX = (currentX / get().gameViewportSize.x) * 3840.0f;
-        float currentY = (getY() - get().gameViewportPos.y);
-        currentY = (1.0f - (currentY / get().gameViewportSize.y)) * 2160.0f;
-        return new Vector2f(currentX, currentY);
+    public static void setGameViewportPos(Vector2f gameViewportPos) {
+        get().gameViewportPos.set(gameViewportPos);
     }
-
-    public static void setGameViewportPos(Vector2f gameViewportPos) { get().gameViewportPos.set(gameViewportPos); }
 
     public static void setGameViewportSize(Vector2f gameViewportSize) {
         get().gameViewportSize.set(gameViewportSize);
