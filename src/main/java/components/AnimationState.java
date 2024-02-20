@@ -6,14 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AnimationState {
-    public String title;
 
-    // list hoạt ảnh giữa nhiều ảnh
+    public String title;
     public List<Frame> animationFrames = new ArrayList<>();
 
     private static Sprite defaultSprite = new Sprite();
-
-    //tgian giữa các hoạt ảnh
     private float time = 0.0f;
     private transient int currentSprite = 0;
     private boolean doesLoop = false;
@@ -38,7 +35,6 @@ public class AnimationState {
         this.doesLoop = doesLoop;
     }
 
-    //chuyển động giữa các sprite
     public void update(float dt) {
         if (currentSprite < animationFrames.size()) {
             time -= dt;

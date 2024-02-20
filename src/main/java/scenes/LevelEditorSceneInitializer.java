@@ -3,10 +3,7 @@ package scenes;
 import components.*;
 import imgui.ImGui;
 import imgui.ImVec2;
-import jade.Direction;
-import jade.GameObject;
-import jade.Prefabs;
-import jade.Sound;
+import jade.*;
 import org.joml.Vector2f;
 import physics2d.components.Box2DCollider;
 import physics2d.components.Rigidbody2D;
@@ -16,25 +13,15 @@ import util.AssetPool;
 import java.io.File;
 import java.util.Collection;
 
-/**
- * Lớp khởi tạo cho cảnh chỉnh sửa cấp độ (Level Editor).
- */
 public class LevelEditorSceneInitializer extends SceneInitializer {
 
     private Spritesheet sprites;
     private GameObject levelEditorStuff;
 
-    /**
-     * Constructor mặc định.
-     */
     public LevelEditorSceneInitializer() {
+
     }
 
-    /**
-     * Phương thức khởi tạo cảnh.
-     *
-     * @param scene Cảnh được khởi tạo.
-     */
     @Override
     public void init(Scene scene) {
         sprites = AssetPool.getSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png");
@@ -50,11 +37,6 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
         scene.addGameObjectToScene(levelEditorStuff);
     }
 
-    /**
-     * Phương thức tải tài nguyên cần thiết cho cảnh.
-     *
-     * @param scene Cảnh được tải tài nguyên.
-     */
     @Override
     public void loadResources(Scene scene) {
         AssetPool.getShader("assets/shaders/default.glsl");
@@ -71,8 +53,8 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
         AssetPool.addSpritesheet("assets/images/bigSpritesheet.png",
                 new Spritesheet(AssetPool.getTexture("assets/images/bigSpritesheet.png"),
                         16, 32, 42, 0));
-        AssetPool.addSpritesheet("assets/images/spritesheets/pipes.png",
-                new Spritesheet(AssetPool.getTexture("assets/images/spritesheets/pipes.png"),
+        AssetPool.addSpritesheet("assets/images/pipes.png",
+                new Spritesheet(AssetPool.getTexture("assets/images/pipes.png"),
                         32, 32, 4, 0));
         AssetPool.addSpritesheet("assets/images/items.png",
                 new Spritesheet(AssetPool.getTexture("assets/images/items.png"),
@@ -113,18 +95,17 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
         }
     }
 
-    /**
-     * Phương thức hiển thị giao diện ImGui cho cảnh chỉnh sửa cấp độ.
-     */
     @Override
     public void imgui() {
         ImGui.begin("Level Editor Stuff");
         levelEditorStuff.imgui();
         ImGui.end();
 
-        ImGui.begin("Objects");
+        ImGui.begin("Test window");
+
         if (ImGui.beginTabBar("WindowTabBar")) {
             if (ImGui.beginTabItem("Solid Blocks")) {
+
                 ImVec2 windowPos = new ImVec2();
                 ImGui.getWindowPos(windowPos);
                 ImVec2 windowSize = new ImVec2();
@@ -168,8 +149,10 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
                         ImGui.sameLine();
                     }
                 }
+
                 ImGui.endTabItem();
             }
+
             if (ImGui.beginTabItem("Decoration Blocks")) {
                 ImVec2 windowPos = new ImVec2();
                 ImGui.getWindowPos(windowPos);
@@ -260,7 +243,29 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
                 ImGui.popID();
                 ImGui.sameLine();
 
-                Spritesheet pipes = AssetPool.getSpritesheet("assets/images/spritesheets/pipes.png");
+                sprite = items.getSprite(6);
+                id = sprite.getTexId();
+                texCoords = sprite.getTexCoords();
+                ImGui.pushID(uid++);
+                if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
+                    GameObject object = Prefabs.generateFlagtop();
+                    levelEditorStuff.getComponent(MouseControls.class).pickupObject(object);
+                }
+                ImGui.popID();
+                ImGui.sameLine();
+
+                sprite = items.getSprite(33);
+                id = sprite.getTexId();
+                texCoords = sprite.getTexCoords();
+                ImGui.pushID(uid++);
+                if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
+                    GameObject object = Prefabs.generateFlagPole();
+                    levelEditorStuff.getComponent(MouseControls.class).pickupObject(object);
+                }
+                ImGui.popID();
+                ImGui.sameLine();
+
+                Spritesheet pipes = AssetPool.getSpritesheet("assets/images/pipes.png");
                 sprite = pipes.getSprite(0);
                 id = sprite.getTexId();
                 texCoords = sprite.getTexCoords();
@@ -306,6 +311,7 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
 
                 ImGui.endTabItem();
             }
+
             if (ImGui.beginTabItem("Sounds")) {
                 Collection<Sound> sounds = AssetPool.getAllSounds();
                 for (Sound sound : sounds) {
@@ -327,6 +333,7 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
             }
             ImGui.endTabBar();
         }
+
         ImGui.end();
     }
 }

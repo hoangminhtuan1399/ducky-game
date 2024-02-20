@@ -1,6 +1,7 @@
 package physics2d;
 
 import components.Ground;
+import components.PlayerController;
 import jade.GameObject;
 import jade.Transform;
 import jade.Window;
@@ -9,12 +10,13 @@ import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.*;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import physics2d.components.Box2DCollider;
 import physics2d.components.CircleCollider;
 import physics2d.components.PillboxCollider;
 import physics2d.components.Rigidbody2D;
+import renderer.DebugDraw;
 
-// Lớp quản lý hệ thống vật lý 2D dựa trên thư viện JBox2D.
 public class Physics2D {
     private Vec2 gravity = new Vec2(0, -10.0f);
     private World world = new World(gravity);
@@ -32,7 +34,6 @@ public class Physics2D {
         return new Vector2f(world.getGravity().x, world.getGravity().y);
     }
 
-    // Phương thức thêm một đối tượng GameObject vào hệ thống vật lý.
     public void add(GameObject go) {
         Rigidbody2D rb = go.getComponent(Rigidbody2D.class);
         if (rb != null && rb.getRawBody() == null) {
@@ -49,7 +50,6 @@ public class Physics2D {
             bodyDef.angularVelocity = rb.angularVelocity;
             bodyDef.userData = rb.gameObject;
 
-            // Thiết lập loại cơ thể vật lý dựa trên loại cơ thể của Rigidbody2D.
             switch (rb.getBodyType()) {
                 case Kinematic: bodyDef.type = BodyType.KINEMATIC; break;
                 case Static: bodyDef.type = BodyType.STATIC; break;
@@ -64,7 +64,6 @@ public class Physics2D {
             Box2DCollider boxCollider;
             PillboxCollider pillboxCollider;
 
-            // Xác định loại hình dạng của Collider và tạo hình dạng tương ứng.
             if ((circleCollider = go.getComponent(CircleCollider.class)) != null) {
                 addCircleCollider(rb, circleCollider);
             }
@@ -79,7 +78,6 @@ public class Physics2D {
         }
     }
 
-    // Phương thức hủy một GameObject khỏi hệ thống vật lý.
     public void destroyGameObject(GameObject go) {
         Rigidbody2D rb = go.getComponent(Rigidbody2D.class);
         if (rb != null) {
@@ -90,7 +88,6 @@ public class Physics2D {
         }
     }
 
-    // Phương thức cập nhật trạng thái của hệ thống vật lý trong mỗi frame.
     public void update(float dt) {
         physicsTime += dt;
         if (physicsTime >= 0.0f) {
@@ -121,7 +118,6 @@ public class Physics2D {
         }
     }
 
-    //Xóa các vật thể hiện tại, thêm lại một vật thể hình mới và đặt lại dữ liệu
     public void resetCircleCollider(Rigidbody2D rb, CircleCollider circleCollider) {
         Body body = rb.getRawBody();
         if (body == null) return;
@@ -135,7 +131,6 @@ public class Physics2D {
         body.resetMassData();
     }
 
-    //Xóa các vật thể hiện tại, thêm lại một vật thể hình mới và đặt lại dữ liệu
     public void resetBox2DCollider(Rigidbody2D rb, Box2DCollider boxCollider) {
         Body body = rb.getRawBody();
         if (body == null) return;

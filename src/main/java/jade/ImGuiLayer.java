@@ -14,6 +14,8 @@ import imgui.type.ImBoolean;
 import renderer.PickingTexture;
 import scenes.Scene;
 
+import java.io.File;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
@@ -56,7 +58,7 @@ public class ImGuiLayer {
 
         io.setIniFilename("imgui.ini"); // We don't want to save .ini file
         io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
-//        io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
+        io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
         io.setBackendPlatformName("imgui_java_impl_glfw");
 
         // ------------------------------------------------------------
@@ -102,8 +104,6 @@ public class ImGuiLayer {
 
             if (!io.getWantCaptureMouse() || gameViewWindow.getWantCaptureMouse()) {
                 MouseListener.mouseButtonCallback(w, button, action, mods);
-            } else {
-                MouseListener.clear();
             }
         });
 
@@ -112,6 +112,8 @@ public class ImGuiLayer {
             io.setMouseWheel(io.getMouseWheel() + (float) yOffset);
             if (!io.getWantCaptureMouse() || gameViewWindow.getWantCaptureMouse()) {
                 MouseListener.mouseScrollCallback(w, xOffset, yOffset);
+            } else {
+                MouseListener.clear();
             }
         });
 
@@ -138,17 +140,19 @@ public class ImGuiLayer {
         // Fonts configuration
         // Read: https://raw.githubusercontent.com/ocornut/imgui/master/docs/FONTS.txt
 
-        final ImFontAtlas fontAtlas = io.getFonts();
-        final ImFontConfig fontConfig = new ImFontConfig(); // Natively allocated object, should be explicitly destroyed
+        if (new File("assets/fonts/segoeui.ttf").isFile()) {
+            final ImFontAtlas fontAtlas = io.getFonts();
+            final ImFontConfig fontConfig = new ImFontConfig(); // Natively allocated object, should be explicitly destroyed
 
-        // Glyphs could be added per-font as well as per config used globally like here
-        fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesDefault());
+            // Glyphs could be added per-font as well as per config used globally like here
+            fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesDefault());
 
-        // Fonts merge example
-        fontConfig.setPixelSnapH(true);
-        fontAtlas.addFontFromFileTTF("assets/fonts/segoeui.ttf", 32, fontConfig);
+            // Fonts merge example
+            fontConfig.setPixelSnapH(true);
+            fontAtlas.addFontFromFileTTF("assets/fonts/segoeui.ttf", 32, fontConfig);
+            fontConfig.destroy(); // After all fonts were added we don't need this config more
+        }
 
-        fontConfig.destroy(); // After all fonts were added we don't need this config more
 
         // Method initializes LWJGL3 renderer.
         // This method SHOULD be called after you've initialized your ImGui configuration (fonts and so on).

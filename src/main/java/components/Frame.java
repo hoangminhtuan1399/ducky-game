@@ -1,7 +1,6 @@
 package components;
 
-public class Frame {
-    //hoạt ảnh giữa nhiều ảnh (sprite)
+class Frame {
     public Sprite sprite;
     public float frameTime;
 

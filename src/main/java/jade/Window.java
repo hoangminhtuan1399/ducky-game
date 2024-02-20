@@ -1,8 +1,10 @@
 package jade;
 
+import editor.GameViewWindow;
 import observers.EventSystem;
 import observers.Observer;
 import observers.events.Event;
+import observers.events.EventType;
 import org.joml.Vector4f;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -68,12 +70,9 @@ public class Window implements Observer {
         return Window.window;
     }
 
-    public static Physics2D getPhysics() {
-        return currentScene.getPhysics();
-    }
+    public static Physics2D getPhysics() { return currentScene.getPhysics(); }
 
     public static Scene getScene() {
-
         return currentScene;
     }
 
@@ -138,7 +137,6 @@ public class Window implements Observer {
         String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
         audioDevice = alcOpenDevice(defaultDeviceName);
 
-                // ngữ cảnh cho âm thanh
         int[] attributes = {0};
         audioContext = alcCreateContext(audioDevice, attributes);
         alcMakeContextCurrent(audioContext);
@@ -160,9 +158,9 @@ public class Window implements Observer {
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-        this.framebuffer = new Framebuffer(3840, 2160);
-        this.pickingTexture = new PickingTexture(3840, 2160);
-        glViewport(0, 0, 3840, 2160);
+        this.framebuffer = new Framebuffer(1920, 1080);
+        this.pickingTexture = new PickingTexture(1920, 1080);
+        glViewport(0, 0, 1920, 1080);
 
         this.imguiLayer = new ImGuiLayer(glfwWindow, pickingTexture);
         this.imguiLayer.initImGui();
@@ -186,7 +184,7 @@ public class Window implements Observer {
             glDisable(GL_BLEND);
             pickingTexture.enableWriting();
 
-            glViewport(0, 0, 3840, 2160);
+            glViewport(0, 0, 1920, 1080);
             glClearColor(0, 0, 0, 0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -229,11 +227,11 @@ public class Window implements Observer {
     }
 
     public static int getWidth() {
-        return get().width;
+        return 1920;//get().width;
     }
 
     public static int getHeight() {
-        return get().height;
+        return 1080;//get().height;
     }
 
     public static void setWidth(int newWidth) {
@@ -270,8 +268,10 @@ public class Window implements Observer {
                 break;
             case LoadLevel:
                 Window.changeScene(new LevelEditorSceneInitializer());
+                break;
             case SaveLevel:
                 currentScene.save();
+                break;
         }
     }
 }
