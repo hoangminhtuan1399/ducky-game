@@ -1,5 +1,5 @@
 package jade;
-
+import static org.lwjgl.opengl.GL30.*;
 import observers.EventSystem;
 import observers.Observer;
 import observers.events.Event;
@@ -23,7 +23,6 @@ import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window implements Observer {
@@ -41,7 +40,6 @@ public class Window implements Observer {
     private long audioDevice;
 
     private static Scene currentScene;
-
     // NOTE: Turn this to false if you want to include the editor in the game
     //       true means it will just ship the game without the editor and ImGui stuff
     public static final boolean RELEASE_BUILD = false;
@@ -58,11 +56,9 @@ public class Window implements Observer {
             currentScene.destroy();
         }
 
-        // NOTE: Only enable ImGui for ! release builds
         if (!RELEASE_BUILD) {
             getImguiLayer().getPropertiesWindow().setActiveGameObject(null);
         }
-
         currentScene = new Scene(sceneInitializer);
         currentScene.load();
         currentScene.init();
@@ -77,9 +73,12 @@ public class Window implements Observer {
         return Window.window;
     }
 
-    public static Physics2D getPhysics() { return currentScene.getPhysics(); }
+    public static Physics2D getPhysics() {
+        return currentScene.getPhysics();
+    }
 
     public static Scene getScene() {
+
         return currentScene;
     }
 
@@ -144,6 +143,7 @@ public class Window implements Observer {
         String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
         audioDevice = alcOpenDevice(defaultDeviceName);
 
+        // ngữ cảnh cho âm thanh
         int[] attributes = {0};
         audioContext = alcCreateContext(audioDevice, attributes);
         alcMakeContextCurrent(audioContext);
@@ -169,7 +169,6 @@ public class Window implements Observer {
         this.pickingTexture = new PickingTexture(1920, 1080);
         glViewport(0, 0, 1920, 1080);
 
-        // NOTE: If we're building for release, we want to skip any imgui things
         if (RELEASE_BUILD) {
             runtimePlaying = true;
             Window.changeScene(new LevelSceneInitializer());
@@ -250,11 +249,11 @@ public class Window implements Observer {
     }
 
     public static int getWidth() {
-        return 1920;//get().width;
+        return get().width;
     }
 
     public static int getHeight() {
-        return 1080;//get().height;
+        return get().height;
     }
 
     public static void setWidth(int newWidth) {
@@ -291,10 +290,8 @@ public class Window implements Observer {
                 break;
             case LoadLevel:
                 Window.changeScene(new LevelEditorSceneInitializer());
-                break;
             case SaveLevel:
                 currentScene.save();
-                break;
         }
     }
 }
