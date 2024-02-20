@@ -250,11 +250,11 @@ public class Window implements Observer {
     }
 
     public static int getWidth() {
-        return 3840;//get().width;
+        return 1920;//get().width;
     }
 
     public static int getHeight() {
-        return 2160;//get().height;
+        return 1080;//get().height;
     }
 
     public static void setWidth(int newWidth) {
