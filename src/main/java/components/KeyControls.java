@@ -15,10 +15,10 @@ public class KeyControls extends Component {
     private float debounceTime = 0.2f;
     private float debounce = 0.0f;
 
+    // ctrl + D để copy, delete để xóa
     @Override
     public void editorUpdate(float dt) {
         debounce -= dt;
-
         PropertiesWindow propertiesWindow = Window.getImguiLayer().getPropertiesWindow();
         GameObject activeGameObject = propertiesWindow.getActiveGameObject();
         List<GameObject> activeGameObjects = propertiesWindow.getActiveGameObjects();
