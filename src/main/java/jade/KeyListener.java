@@ -8,14 +8,14 @@ import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 public class KeyListener {
     private static KeyListener instance;
     private boolean keyPressed[] = new boolean[350];
-    private boolean keyBeginPressed[] = new boolean[350];
+    private boolean keyBeginPress[] = new boolean[350];
 
     private KeyListener() {
 
     }
 
     public static void endFrame() {
-        Arrays.fill(get().keyBeginPressed, false);
+        Arrays.fill(get().keyBeginPress, false);
     }
 
     public static KeyListener get() {
@@ -29,10 +29,10 @@ public class KeyListener {
     public static void keyCallback(long window, int key, int scancode, int action, int mods) {
         if (action == GLFW_PRESS) {
             get().keyPressed[key] = true;
-            get().keyBeginPressed[key] = true;
+            get().keyBeginPress[key] = true;
         } else if (action == GLFW_RELEASE) {
             get().keyPressed[key] = false;
-            get().keyBeginPressed[key] = false;
+            get().keyBeginPress[key] = false;
         }
     }
 
@@ -41,6 +41,6 @@ public class KeyListener {
     }
 
     public static boolean keyBeginPress(int keyCode) {
-        return get().keyBeginPressed[keyCode];
+        return get().keyBeginPress[keyCode];
     }
 }
