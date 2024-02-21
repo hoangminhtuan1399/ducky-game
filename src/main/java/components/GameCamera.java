@@ -28,10 +28,12 @@ public class GameCamera extends Component {
                 this.gameCamera.getProjectionSize().y - this.cameraBuffer;
     }
 
+
     @Override
     public void update(float dt) {
         if (player != null && !player.getComponent(PlayerController.class).hasWon()) {
-            gameCamera.position.x = Math.max(player.transform.position.x - 2.5f, highestX);
+            // Thay đổi dòng code sau
+            gameCamera.position.x = player.transform.position.x - 2.5f;
             highestX = Math.max(highestX, gameCamera.position.x);
 
             if (player.transform.position.y < -playerBuffer) {
