@@ -67,7 +67,9 @@ public class Gizmo extends Component {
 
     @Override
     public void editorUpdate(float dt) {
-        if (!using) return;
+        if (!using) {
+            return;
+        }
 
         this.activeGameObject = this.propertiesWindow.getActiveGameObject();
         if (this.activeGameObject != null) {
@@ -91,6 +93,7 @@ public class Gizmo extends Component {
             yAxisActive = false;
         }
 
+        // Dòng sau đây đang làm thay đổi vị trí của Gizmo mỗi lần editorUpdate được gọi
         if (this.activeGameObject != null) {
             this.xAxisObject.transform.position.set(this.activeGameObject.transform.position);
             this.yAxisObject.transform.position.set(this.activeGameObject.transform.position);

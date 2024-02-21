@@ -1,5 +1,7 @@
 package components;
-
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import jade.GameObject;
 import jade.KeyListener;
 import jade.Prefabs;
@@ -14,7 +16,6 @@ import physics2d.enums.BodyType;
 import scenes.LevelEditorSceneInitializer;
 import scenes.LevelSceneInitializer;
 import util.AssetPool;
-
 import static org.lwjgl.glfw.GLFW.*;
 
 public class PlayerController extends Component {
@@ -57,17 +58,62 @@ public class PlayerController extends Component {
     private transient boolean playWinAnimation = false;
     private transient float timeToCastle = 4.5f;
     private transient float walkTime = 2.2f;
-
+    private Vector2f startPosition;
     @Override
     public void start() {
         this.spr = gameObject.getComponent(SpriteRenderer.class);
         this.rb = gameObject.getComponent(Rigidbody2D.class);
         this.stateMachine = gameObject.getComponent(StateMachine.class);
         this.rb.setGravityScale(0.0f);
+        
+        this.startPosition = new Vector2f(gameObject.transform.position);
+    }
+    private boolean isFallingIntoVoid = false;
+
+
+    private boolean isPlayerFallingIntoVoid(float playerY) {
+        float voidThreshold = -4f;
+        isFallingIntoVoid = playerY < voidThreshold;
+        return isFallingIntoVoid;
     }
 
+    private boolean respawnScheduled = false;
+    private ScheduledExecutorService respawnScheduler;
+
+    private void scheduleRespawn() {
+        respawnScheduled = true;
+        respawnScheduler = Executors.newSingleThreadScheduledExecutor();
+        respawnScheduler.schedule(this::respawnPlayer, (long) (respawnTime * 1000), TimeUnit.MILLISECONDS);
+    }
+    private float respawnTime = 2.0f;
+
+    private void respawnPlayer() {
+        // Thực hiện các bước cần thiết để hồi sinh nhân vật
+        // ...
+
+        // Đặt lại các trạng thái và hủy bỏ lịch hẹn
+        respawnScheduled = false;
+        respawnScheduler.shutdown();
+    }
     @Override
     public void update(float dt) {
+        if (isPlayerFallingIntoVoid(gameObject.transform.position.y)) {
+            if (!isDead) {
+                die();
+                isFallingIntoVoid = false; // Đặt lại cờ
+                scheduleRespawn(); // Lên lịch hẹn giờ cho việc hồi sinh
+            }
+        }
+
+        // Kiểm tra xem có lịch hẹn hồi sinh nào đang chờ đợi không
+        if (respawnScheduled) {
+            // Nếu có, có thể thực hiện một số xử lý khác nếu cần thiết trong thời gian chờ đợi
+            // ...
+            return; // Bỏ qua phần xử lý chính nếu đang chờ đợi hồi sinh
+        }
+
+
+
         if (playWinAnimation) {
             checkOnGround();
             if (!onGround) {
@@ -334,7 +380,6 @@ public class PlayerController extends Component {
             AssetPool.getSound("assets/sounds/pipe.ogg").play();
         }
     }
-
     public boolean hasWon() {
         return false;
     }
