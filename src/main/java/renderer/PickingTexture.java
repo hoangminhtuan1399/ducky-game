@@ -66,7 +66,7 @@ public class PickingTexture {
     public void disableWriting() {
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     }
-    /** đọc giá trị pixel từ framebuffer tại tọa độ (x,y) và trả về giá trị đã được lưu trữ **/
+
     public int readPixel(int x, int y) {
         glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
         glReadBuffer(GL_COLOR_ATTACHMENT0);
@@ -77,8 +77,6 @@ public class PickingTexture {
         return (int)(pixels[0]) - 1;
     }
 
-
-    //đọc nhiều dữ liêu pixel
     public float[] readPixels(Vector2i start, Vector2i end) {
         glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
         glReadBuffer(GL_COLOR_ATTACHMENT0);

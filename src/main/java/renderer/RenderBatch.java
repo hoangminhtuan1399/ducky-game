@@ -1,11 +1,13 @@
 package renderer;
 
 import components.SpriteRenderer;
+import components.StateMachine;
 import jade.GameObject;
 import jade.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
+import util.AssetPool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +50,10 @@ public class RenderBatch implements Comparable<RenderBatch> {
     private int zIndex;
 
     private Renderer renderer;
+
     public RenderBatch(int maxBatchSize, int zIndex, Renderer renderer) {
         this.renderer = renderer;
+
         this.zIndex = zIndex;
         this.sprites = new SpriteRenderer[maxBatchSize];
         this.maxBatchSize = maxBatchSize;
@@ -130,6 +134,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
                 }
             }
 
+            // TODO: get better solution for this
             if (spr.gameObject.transform.zIndex != this.zIndex) {
                 destroyIfExists(spr.gameObject);
                 renderer.add(spr.gameObject);
@@ -287,7 +292,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
     }
 
     public boolean hasTextureRoom() {
-        return this.textures.size() < 8;
+        return this.textures.size() < 7;
     }
 
     public boolean hasTexture(Texture tex) {

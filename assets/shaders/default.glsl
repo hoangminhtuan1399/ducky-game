@@ -14,11 +14,11 @@ out float fTexId;
 
 void main()
 {
-    fColor =aColor;
+    fColor = aColor;
     fTexCoords = aTexCoords;
     fTexId = aTexId;
 
-    gl_Position = uProjection * uView * vec4(aPos,1.0);
+    gl_Position = uProjection * uView * vec4(aPos, 1.0);
 }
 
 #type fragment
@@ -34,9 +34,16 @@ out vec4 color;
 
 void main()
 {
-    if (fTexId>0){
+    if (fTexId > 0) {
+        // NOTE: If you're on AMD GPUs try commenting this line out and replacing it with
+        // the next few lines. The issue here is dynamic indexing is undefined behavior
+        // in GLSL, so this is not guaranteed to work on all hardware
+        //
+        // int id = int(fTexId);
+        // color = fColor * texture(uTextures[id], fTexCoords);
+
         int id = int(fTexId);
-        switch (int(id)) {
+        switch (id) {
             case 0:
             color = fColor * texture(uTextures[0], fTexCoords);
             break;
@@ -61,10 +68,7 @@ void main()
             case 7:
             color = fColor * texture(uTextures[7], fTexCoords);
             break;
-
         }
-        //        color = fColor * texture(uTextures[id], fTexCoords);
-        //color =vec4(fTexCoords,0,1);
     } else {
         color = fColor;
     }

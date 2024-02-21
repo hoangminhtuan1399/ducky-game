@@ -1,6 +1,7 @@
 package editor;
 
 import imgui.ImGui;
+import imgui.flag.ImGuiDragDropFlags;
 import imgui.flag.ImGuiTreeNodeFlags;
 import jade.GameObject;
 import jade.Window;
@@ -8,7 +9,8 @@ import jade.Window;
 import java.util.List;
 
 public class SceneHierarchyWindow {
-    private static String payLoadDragDropType = "SceneHierarchy";
+
+    private static String payloadDragDropType = "SceneHierarchy";
 
     public void imgui() {
         ImGui.begin("Scene Hierarchy");
@@ -21,11 +23,9 @@ public class SceneHierarchyWindow {
             }
 
             boolean treeNodeOpen = doTreeNode(obj, index);
-
             if (treeNodeOpen) {
                 ImGui.treePop();
             }
-
             index++;
         }
 
@@ -42,31 +42,20 @@ public class SceneHierarchyWindow {
                         ImGuiTreeNodeFlags.SpanAvailWidth,
                 obj.name
         );
-
         ImGui.popID();
 
-        /** Drag and drop (dnd) đối tượng */
         if (ImGui.beginDragDropSource()) {
-            /** Gán đối tượng được dnd vào payload */
-            ImGui.setDragDropPayloadObject(payLoadDragDropType, obj);
-
-            /** Hiển thị tên đối tượng được dnd */
+            ImGui.setDragDropPayloadObject(payloadDragDropType, obj);
             ImGui.text(obj.name);
-
             ImGui.endDragDropSource();
         }
 
-        /** Dnd mục tiêu */
         if (ImGui.beginDragDropTarget()) {
-
-            /** Kiểm tra xem mục tiêu được dnd có cùng payload không */
-            Object payloadObj = ImGui.acceptDragDropPayloadObject(payLoadDragDropType);
+            Object payloadObj = ImGui.acceptDragDropPayloadObject(payloadDragDropType);
             if (payloadObj != null) {
-
-                /** Kiểm tra xem mục tiêu được dnd có phải GameObject không */
                 if (payloadObj.getClass().isAssignableFrom(GameObject.class)) {
-                    GameObject playerGameObj = (GameObject) payloadObj;
-                    System.out.println("Payload accepted " + playerGameObj.name);
+                    GameObject playerGameObj = (GameObject)payloadObj;
+                    System.out.println("Payload accepted '" + playerGameObj.name + "'");
                 }
             }
             ImGui.endDragDropTarget();

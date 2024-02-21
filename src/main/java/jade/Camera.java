@@ -8,6 +8,7 @@ import org.joml.Vector4f;
 public class Camera {
     private Matrix4f projectionMatrix, viewMatrix, inverseProjection, inverseView;
     public Vector2f position;
+
     private float projectionWidth = 6;
     private float projectionHeight = 3;
     public Vector4f clearColor = new Vector4f(1, 1, 1, 1);
@@ -25,7 +26,6 @@ public class Camera {
     }
 
     public void adjustProjection() {
-        // chỉ cho màn hình của mình biết mình muốn nó lớn tới mức nào (tính bằng pixel)
         projectionMatrix.identity();
         projectionMatrix.ortho(0.0f, projectionSize.x * this.zoom,
                 0.0f, projectionSize.y * zoom, 0.0f, 100.0f);
@@ -35,11 +35,12 @@ public class Camera {
     public Matrix4f getViewMatrix() {
         Vector3f cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);
         Vector3f cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);
-        this.viewMatrix.identity();
-        viewMatrix = viewMatrix.lookAt(new Vector3f(position.x, position.y, 20.0f),
+        viewMatrix.identity();
+        viewMatrix.lookAt(new Vector3f(position.x, position.y, 20.0f),
                 cameraFront.add(position.x, position.y, 0.0f),
                 cameraUp);
         inverseView = new Matrix4f(this.viewMatrix).invert();
+
         return this.viewMatrix;
     }
 
@@ -48,16 +49,17 @@ public class Camera {
     }
 
     public Matrix4f getInverseProjection() {
-        return inverseProjection;
+        return this.inverseProjection;
     }
 
     public Matrix4f getInverseView() {
-        return inverseView;
+        return this.inverseView;
     }
 
     public Vector2f getProjectionSize() {
         return this.projectionSize;
     }
+
     public float getZoom() {
         return zoom;
     }

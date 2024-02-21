@@ -38,14 +38,12 @@ public class StateMachine extends Component {
     private transient AnimationState currentState = null;
     private String defaultStateTitle = "";
 
-    // cập nhật các hình ảnh của trạng thái
     public void refreshTextures() {
         for (AnimationState state : states) {
             state.refreshTextures();
         }
     }
 
-    //    đặt trạng thái mặc định
     public void setDefaultState(String animationTitle) {
         for (AnimationState state : states) {
             if (state.title.equals(animationTitle)) {
@@ -60,18 +58,14 @@ public class StateMachine extends Component {
         System.out.println("Unable to find default state '" + animationTitle + "'");
     }
 
-    //thêm chuyển trạng thái
     public void addState(String from, String to, String onTrigger) {
         this.stateTransfers.put(new StateTrigger(from, onTrigger), to);
     }
 
-
-    //thêm một trạng thái
     public void addState(AnimationState state) {
         this.states.add(state);
     }
 
-    //kích hoạt trigger
     public void trigger(String trigger) {
         for (StateTrigger state : stateTransfers.keySet()) {
             if (state.state.equals(currentState.title) && state.trigger.equals(trigger)) {
@@ -120,7 +114,6 @@ public class StateMachine extends Component {
         }
     }
 
-
     @Override
     public void editorUpdate(float dt) {
         if (currentState != null) {
@@ -133,7 +126,6 @@ public class StateMachine extends Component {
         }
     }
 
-    //hiển thị giao diện người dùng của state
     @Override
     public void imgui() {
         for (AnimationState state : states) {

@@ -8,23 +8,18 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-// Lớp JImGui chứa các phương thức giúp vẽ các điều khiển ImGui trong ứng dụng.
 public class JImGui {
 
-    // Độ rộng mặc định của cột trong ImGui.
     private static float defaultColumnWidth = 220.0f;
 
-    // Vẽ điều khiển để chỉnh sửa Vector2f trong ImGui.
     public static void drawVec2Control(String label, Vector2f values) {
         drawVec2Control(label, values, 0.0f, defaultColumnWidth);
     }
 
-    // Phương thức vẽ điều khiển Vector2f trong ImGui với giá trị reset mặc định.
     public static void drawVec2Control(String label, Vector2f values, float resetValue) {
         drawVec2Control(label, values, resetValue, defaultColumnWidth);
     }
 
-    // Phương thức vẽ điều khiển Vector2f trong ImGui với giá trị reset và độ rộng cột tùy chọn.
     public static void drawVec2Control(String label, Vector2f values, float resetValue, float columnWidth) {
         ImGui.pushID(label);
 
@@ -39,7 +34,6 @@ public class JImGui {
         Vector2f buttonSize = new Vector2f(lineHeight + 3.0f, lineHeight);
         float widthEach = (ImGui.calcItemWidth() - buttonSize.x * 2.0f) / 2.0f;
 
-        // Nút X để đặt giá trị X về resetValue
         ImGui.pushItemWidth(widthEach);
         ImGui.pushStyleColor(ImGuiCol.Button, 0.8f, 0.1f, 0.15f, 1.0f);
         ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 0.9f, 0.2f, 0.2f, 1.0f);
@@ -55,7 +49,6 @@ public class JImGui {
         ImGui.popItemWidth();
         ImGui.sameLine();
 
-        // Nút Y và thanh trượt cho giá trị Y
         ImGui.pushItemWidth(widthEach);
         ImGui.pushStyleColor(ImGuiCol.Button, 0.2f, 0.7f, 0.2f, 1.0f);
         ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 0.3f, 0.8f, 0.3f, 1.0f);
@@ -81,17 +74,14 @@ public class JImGui {
         ImGui.popID();
     }
 
-    // Vẽ điều khiển để chỉnh sửa Vector3f trong ImGui.
     public static void drawVec3Control(String label, Vector3f values) {
         drawVec3Control(label, values, 0.0f, defaultColumnWidth);
     }
 
-    // Phương thức vẽ điều khiển Vector3f trong ImGui với giá trị reset mặc định.
     public static void drawVec3Control(String label, Vector3f values, float resetValue) {
         drawVec3Control(label, values, resetValue, defaultColumnWidth);
     }
 
-    // Phương thức vẽ điều khiển Vector3f trong ImGui với giá trị reset và độ rộng cột tùy chọn.
     public static void drawVec3Control(String label, Vector3f values, float resetValue, float columnWidth) {
         ImGui.pushID(label);
 
@@ -106,7 +96,6 @@ public class JImGui {
         Vector2f buttonSize = new Vector2f(lineHeight + 3.0f, lineHeight);
         float widthEach = (ImGui.calcItemWidth() - buttonSize.x * 3.0f) / 3.0f;
 
-        // Nút X và thanh trượt cho giá trị X
         ImGui.pushItemWidth(widthEach);
         ImGui.pushStyleColor(ImGuiCol.Button, 0.8f, 0.1f, 0.15f, 1.0f);
         ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 0.9f, 0.2f, 0.2f, 1.0f);
@@ -122,7 +111,6 @@ public class JImGui {
         ImGui.popItemWidth();
         ImGui.sameLine();
 
-        // Nút Y và thanh trượt cho giá trị Y
         ImGui.pushItemWidth(widthEach);
         ImGui.pushStyleColor(ImGuiCol.Button, 0.2f, 0.7f, 0.2f, 1.0f);
         ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 0.3f, 0.8f, 0.3f, 1.0f);
@@ -136,9 +124,9 @@ public class JImGui {
         float[] vecValuesY = {values.y};
         ImGui.dragFloat("##Y", vecValuesY, 0.1f);
         ImGui.popItemWidth();
+        ImGui.columns(1);
         ImGui.sameLine();
 
-        // Nút Z và thanh trượt cho giá trị Z
         ImGui.pushItemWidth(widthEach);
         ImGui.pushStyleColor(ImGuiCol.Button, 0.1f, 0.25f, 0.8f, 1.0f);
         ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 0.2f, 0.35f, 0.9f, 1.0f);
@@ -162,7 +150,6 @@ public class JImGui {
         ImGui.popID();
     }
 
-    // Kéo giá trị kiểu float trong ImGui.
     public static float dragFloat(String label, float value) {
         ImGui.pushID(label);
 
@@ -180,7 +167,6 @@ public class JImGui {
         return valArr[0];
     }
 
-    // Kéo giá trị kiểu int trong ImGui.
     public static int dragInt(String label, int value) {
         ImGui.pushID(label);
 
@@ -198,7 +184,6 @@ public class JImGui {
         return valArr[0];
     }
 
-    // Chọn màu RGBA trong ImGui.
     public static boolean colorPicker4(String label, Vector4f color) {
         boolean res = false;
         ImGui.pushID(label);

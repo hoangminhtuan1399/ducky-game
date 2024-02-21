@@ -23,6 +23,7 @@ import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window implements Observer {
@@ -41,6 +42,10 @@ public class Window implements Observer {
 
     private static Scene currentScene;
 
+    // NOTE: Turn this to false if you want to include the editor in the game
+    //       true means it will just ship the game without the editor and ImGui stuff
+    public static final boolean RELEASE_BUILD = false;
+
     private Window() {
         this.width = 1920;
         this.height = 1080;
@@ -53,7 +58,11 @@ public class Window implements Observer {
             currentScene.destroy();
         }
 
-        getImguiLayer().getPropertiesWindow().setActiveGameObject(null);
+        // NOTE: Only enable ImGui for ! release builds
+        if (!RELEASE_BUILD) {
+            getImguiLayer().getPropertiesWindow().setActiveGameObject(null);
+        }
+
         currentScene = new Scene(sceneInitializer);
         currentScene.load();
         currentScene.init();
@@ -68,12 +77,9 @@ public class Window implements Observer {
         return Window.window;
     }
 
-    public static Physics2D getPhysics() {
-        return currentScene.getPhysics();
-    }
+    public static Physics2D getPhysics() { return currentScene.getPhysics(); }
 
     public static Scene getScene() {
-
         return currentScene;
     }
 
@@ -138,7 +144,6 @@ public class Window implements Observer {
         String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
         audioDevice = alcOpenDevice(defaultDeviceName);
 
-                // ngữ cảnh cho âm thanh
         int[] attributes = {0};
         audioContext = alcCreateContext(audioDevice, attributes);
         alcMakeContextCurrent(audioContext);
@@ -160,14 +165,18 @@ public class Window implements Observer {
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-        this.framebuffer = new Framebuffer(3840, 2160);
-        this.pickingTexture = new PickingTexture(3840, 2160);
-        glViewport(0, 0, 3840, 2160);
-
-        this.imguiLayer = new ImGuiLayer(glfwWindow, pickingTexture);
-        this.imguiLayer.initImGui();
-
-        Window.changeScene(new LevelEditorSceneInitializer());
+        this.framebuffer = new Framebuffer(1920, 1080);
+        this.pickingTexture = new PickingTexture(1920, 1080);
+        glViewport(0, 0, 1920, 1080);
+        // NOTE: If we're building for release, we want to skip any imgui things
+        if (RELEASE_BUILD) {
+            runtimePlaying = true;
+            Window.changeScene(new LevelSceneInitializer());
+        } else {
+            this.imguiLayer = new ImGuiLayer(glfwWindow, pickingTexture);
+            this.imguiLayer.initImGui();
+            Window.changeScene(new LevelEditorSceneInitializer());
+        }
     }
 
     public void loop() {
@@ -186,7 +195,7 @@ public class Window implements Observer {
             glDisable(GL_BLEND);
             pickingTexture.enableWriting();
 
-            glViewport(0, 0, 3840, 2160);
+            glViewport(0, 0, 1920, 1080);
             glClearColor(0, 0, 0, 0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -216,7 +225,18 @@ public class Window implements Observer {
             }
             this.framebuffer.unbind();
 
-            this.imguiLayer.update(dt, currentScene);
+            if (RELEASE_BUILD) {
+                // NOTE: This is the most complicated piece for release builds. In release builds
+                //       we want to just blit the framebuffer to the main window so we can see the game
+                //
+                //       In non-release builds, we usually draw the framebuffer to an ImGui component as an image.
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer.getFboID());
+                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+                glBlitFramebuffer(0, 0, framebuffer.width, framebuffer.height, 0, 0, this.width, this.height,
+                        GL_COLOR_BUFFER_BIT, GL_NEAREST);
+            } else {
+                this.imguiLayer.update(dt, currentScene);
+            }
 
             KeyListener.endFrame();
             MouseListener.endFrame();
@@ -229,11 +249,11 @@ public class Window implements Observer {
     }
 
     public static int getWidth() {
-        return get().width;
+        return 1920;//get().width;
     }
 
     public static int getHeight() {
-        return get().height;
+        return 1080;//get().height;
     }
 
     public static void setWidth(int newWidth) {
@@ -270,8 +290,10 @@ public class Window implements Observer {
                 break;
             case LoadLevel:
                 Window.changeScene(new LevelEditorSceneInitializer());
+                break;
             case SaveLevel:
                 currentScene.save();
+                break;
         }
     }
 }

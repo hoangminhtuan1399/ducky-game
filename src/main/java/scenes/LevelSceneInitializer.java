@@ -1,11 +1,17 @@
 package scenes;
 
-import components.GameCamera;
-import components.SpriteRenderer;
-import components.Spritesheet;
-import components.StateMachine;
-import jade.GameObject;
+import components.*;
+import imgui.ImGui;
+import imgui.ImVec2;
+import jade.*;
+import org.joml.Vector2f;
+import physics2d.components.Box2DCollider;
+import physics2d.components.Rigidbody2D;
+import physics2d.enums.BodyType;
 import util.AssetPool;
+
+import java.io.File;
+import java.util.Collection;
 
 public class LevelSceneInitializer extends SceneInitializer {
     public LevelSceneInitializer() {
@@ -38,8 +44,8 @@ public class LevelSceneInitializer extends SceneInitializer {
         AssetPool.addSpritesheet("assets/images/bigSpritesheet.png",
                 new Spritesheet(AssetPool.getTexture("assets/images/bigSpritesheet.png"),
                         16, 32, 42, 0));
-        AssetPool.addSpritesheet("assets/images/spritesheets/pipes.png",
-                new Spritesheet(AssetPool.getTexture("assets/images/spritesheets//pipes.png"),
+        AssetPool.addSpritesheet("assets/images/pipes.png",
+                new Spritesheet(AssetPool.getTexture("assets/images/pipes.png"),
                         32, 32, 4, 0));
         AssetPool.addSpritesheet("assets/images/items.png",
                 new Spritesheet(AssetPool.getTexture("assets/images/items.png"),
@@ -64,6 +70,8 @@ public class LevelSceneInitializer extends SceneInitializer {
         AssetPool.addSound("assets/sounds/stomp.ogg", false);
         AssetPool.addSound("assets/sounds/kick.ogg", false);
         AssetPool.addSound("assets/sounds/invincible.ogg", false);
+
+        AssetPool.getSound(("assets/sounds/main-theme-overworld.ogg")).play();
 
         for (GameObject g : scene.getGameObjects()) {
             if (g.getComponent(SpriteRenderer.class) != null) {

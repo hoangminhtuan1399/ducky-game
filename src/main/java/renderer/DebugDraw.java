@@ -8,6 +8,7 @@ import util.AssetPool;
 import util.JMath;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL15.*;
@@ -16,7 +17,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class DebugDraw {
-    private static int MAX_LINES = 3000;
+    private static int MAX_LINES = 5000;
 
     private static List<Line2D> lines = new ArrayList<>();
     // 6 floats per vertex, 2 vertices per line
@@ -45,7 +46,7 @@ public class DebugDraw {
         glVertexAttribPointer(1, 3, GL_FLOAT, false, 6 * Float.BYTES, 3 * Float.BYTES);
         glEnableVertexAttribArray(1);
 
-        glLineWidth(3.0f);
+        glLineWidth(2.0f);
     }
 
     public static void beginFrame() {
@@ -88,6 +89,7 @@ public class DebugDraw {
 
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
         glBufferData(GL_ARRAY_BUFFER, vertexArray, GL_DYNAMIC_DRAW);
+
         // Use our shader
         shader.use();
         shader.uploadMat4f("uProjection", Window.getScene().camera().getProjectionMatrix());
@@ -99,7 +101,7 @@ public class DebugDraw {
         glEnableVertexAttribArray(1);
 
         // Draw the batch
-        glDrawArrays(GL_LINES, 0, lines.size() * 6 * 2);
+        glDrawArrays(GL_LINES, 0, lines.size());
 
         // Disable Location
         glDisableVertexAttribArray(0);

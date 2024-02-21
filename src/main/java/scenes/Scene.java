@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import components.Component;
 import components.ComponentDeserializer;
+import imgui.ImGui;
 import jade.Camera;
 import jade.GameObject;
 import jade.GameObjectDeserializer;
@@ -20,9 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Đại diện cho một cảnh trong trò chơi.
- */
 public class Scene {
 
     private Renderer renderer;
@@ -34,11 +32,6 @@ public class Scene {
 
     private SceneInitializer sceneInitializer;
 
-    /**
-     * Xây dựng một Scene với một SceneInitializer cụ thể.
-     *
-     * @param sceneInitializer SceneInitializer để sử dụng cho thiết lập cảnh.
-     */
     public Scene(SceneInitializer sceneInitializer) {
         this.sceneInitializer = sceneInitializer;
         this.physics2D = new Physics2D();
@@ -52,20 +45,14 @@ public class Scene {
         return this.physics2D;
     }
 
-    /**
-     * Khởi tạo cảnh.
-     */
     public void init() {
         this.camera = new Camera(new Vector2f(0, 0));
         this.sceneInitializer.loadResources(this);
         this.sceneInitializer.init(this);
     }
 
-    /**
-     * Bắt đầu cảnh bằng cách gọi phương thức start trên tất cả các đối tượng trò chơi.
-     */
     public void start() {
-        for (int i = 0; i < gameObjects.size(); i++) {
+        for (int i=0; i < gameObjects.size(); i++) {
             GameObject go = gameObjects.get(i);
             go.start();
             this.renderer.add(go);
@@ -74,26 +61,14 @@ public class Scene {
         isRunning = true;
     }
 
-    /**
-     * Thêm một đối tượng trò chơi vào cảnh.
-     *
-     * @param go GameObject để thêm vào.
-     */
     public void addGameObjectToScene(GameObject go) {
         if (!isRunning) {
             gameObjects.add(go);
         } else {
-            gameObjects.add(go);
-            go.start();
-            this.renderer.add(go);
-            this.physics2D.add(go);
             pendingObjects.add(go);
         }
     }
 
-    /**
-     * Hủy bỏ cảnh bằng cách gọi phương thức destroy trên tất cả các đối tượng trò chơi.
-     */
     public void destroy() {
         for (GameObject go : gameObjects) {
             go.destroy();
@@ -110,21 +85,10 @@ public class Scene {
         return null;
     }
 
-    /**
-     * Lấy danh sách các đối tượng trò chơi trong cảnh.
-     *
-     * @return Danh sách các đối tượng trò chơi.
-     */
     public List<GameObject> getGameObjects() {
         return this.gameObjects;
     }
 
-    /**
-     * Lấy đối tượng trò chơi theo ID.
-     *
-     * @param gameObjectId ID của đối tượng trò chơi.
-     * @return Đối tượng trò chơi hoặc null nếu không tìm thấy.
-     */
     public GameObject getGameObject(int gameObjectId) {
         Optional<GameObject> result = this.gameObjects.stream()
                 .filter(gameObject -> gameObject.getUid() == gameObjectId)
@@ -132,15 +96,10 @@ public class Scene {
         return result.orElse(null);
     }
 
-    /**
-     * Cập nhật trình biên tập cảnh.
-     *
-     * @param dt Thời gian delta.
-     */
     public void editorUpdate(float dt) {
         this.camera.adjustProjection();
 
-        for (int i = 0; i < gameObjects.size(); i++) {
+        for (int i=0; i < gameObjects.size(); i++) {
             GameObject go = gameObjects.get(i);
             go.editorUpdate(dt);
 
@@ -168,16 +127,11 @@ public class Scene {
         return result.orElse(null);
     }
 
-    /**
-     * Cập nhật cảnh.
-     *
-     * @param dt Thời gian delta.
-     */
     public void update(float dt) {
         this.camera.adjustProjection();
         this.physics2D.update(dt);
 
-        for (int i = 0; i < gameObjects.size(); i++) {
+        for (int i=0; i < gameObjects.size(); i++) {
             GameObject go = gameObjects.get(i);
             go.update(dt);
 
@@ -198,35 +152,18 @@ public class Scene {
         pendingObjects.clear();
     }
 
-    /**
-     * Render cảnh.
-     */
     public void render() {
         this.renderer.render();
     }
 
-    /**
-     * Trả về Camera của cảnh.
-     *
-     * @return Camera của cảnh.
-     */
     public Camera camera() {
         return this.camera;
     }
 
-    /**
-     * Hiển thị giao diện ImGui.
-     */
     public void imgui() {
         this.sceneInitializer.imgui();
     }
 
-    /**
-     * Tạo một đối tượng trò chơi mới với tên cho trước.
-     *
-     * @param name Tên của đối tượng trò chơi mới.
-     * @return Đối tượng trò chơi mới tạo.
-     */
     public GameObject createGameObject(String name) {
         GameObject go = new GameObject(name);
         go.addComponent(new Transform());
@@ -234,9 +171,6 @@ public class Scene {
         return go;
     }
 
-    /**
-     * Lưu cảnh xuống tệp với định dạng JSON sử dụng Gson.
-     */
     public void save() {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
@@ -255,14 +189,11 @@ public class Scene {
             }
             writer.write(gson.toJson(objsToSerialize));
             writer.close();
-        } catch (IOException e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * Đọc cảnh từ tệp JSON sử dụng Gson.
-     */
     public void load() {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
@@ -282,7 +213,7 @@ public class Scene {
             int maxGoId = -1;
             int maxCompId = -1;
             GameObject[] objs = gson.fromJson(inFile, GameObject[].class);
-            for (int i = 0; i < objs.length; i++) {
+            for (int i=0; i < objs.length; i++) {
                 addGameObjectToScene(objs[i]);
 
                 for (Component c : objs[i].getAllComponents()) {

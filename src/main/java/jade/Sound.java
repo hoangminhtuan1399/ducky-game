@@ -18,7 +18,7 @@ public class Sound {
     public Sound(String filepath, boolean loops) {
         this.filepath = filepath;
 
-        // Tạo không gian cho stb để thông qua stb tải nhạc lên
+        // Allocate space to store the return information from stb
         stackPush();
         IntBuffer channelsBuffer = stackMallocInt(1);
         stackPush();
@@ -33,14 +33,14 @@ public class Sound {
             return;
         }
 
-        // truy xuất thông tin đã dc lưu trong buffer bởi stb
+        // Retrieve the extra information that was stored in the buffers by stb
         int channels = channelsBuffer.get();
         int sampleRate = sampleRateBuffer.get();
-        // giải phóng bộ nhớ
+        // Free
         stackPop();
         stackPop();
 
-        // tìm đinh dạng openAL chính xác
+        // Find the correct openAL format
         int format = -1;
         if (channels == 1) {
             format = AL_FORMAT_MONO16;
