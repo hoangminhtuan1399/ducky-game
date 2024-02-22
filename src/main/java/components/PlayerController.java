@@ -353,6 +353,10 @@ public class PlayerController extends Component {
         if (this.playerState == PlayerState.Small) {
             this.velocity.set(0, 0);
             this.acceleration.set(0, 0);
+
+            // Thiết lập coinCount về 0
+            CoinCounter.getInstance().setCoinCount(0);
+
             this.rb.setVelocity(new Vector2f());
             this.isDead = true;
             this.rb.setIsSensor();
