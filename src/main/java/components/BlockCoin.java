@@ -19,6 +19,7 @@ public class BlockCoin extends Component {
             this.gameObject.transform.position.y += dt * coinSpeed;
             this.gameObject.transform.scale.x -= (0.5f * dt) % -1.0f;
         } else {
+            CoinCounter.getInstance().incrementCoinCount();
             gameObject.destroy();
         }
     }

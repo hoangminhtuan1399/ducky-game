@@ -1,7 +1,9 @@
 package editor;
 
+import components.CoinCounter;
 import imgui.ImGui;
 import imgui.ImVec2;
+import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiWindowFlags;
 import jade.MouseListener;
 import jade.Window;
@@ -27,6 +29,8 @@ public class GameViewWindow {
         if (ImGui.menuItem("Stop", "", !isPlaying, isPlaying)) {
             isPlaying = false;
             EventSystem.notify(null, new Event(EventType.GameEngineStopPlay));
+            // Thiết lập coinCount về 0
+            CoinCounter.getInstance().setCoinCount(0);
         }
         ImGui.endMenuBar();
 
@@ -35,6 +39,8 @@ public class GameViewWindow {
         ImVec2 windowSize = getLargestSizeForViewport();
         ImVec2 windowPos = getCenteredPositionForViewport(windowSize);
         ImGui.setCursorPos(windowPos.x, windowPos.y);
+
+        // Lấy tọa độ góc trên bên trái của cửa sổ
         ImVec2 topLeft = new ImVec2();
         ImGui.getCursorScreenPos(topLeft);
         topLeft.x -= ImGui.getScrollX();
@@ -43,12 +49,21 @@ public class GameViewWindow {
         bottomY = topLeft.y;
         rightX = topLeft.x + windowSize.x;
         topY = topLeft.y + windowSize.y;
+
+        // Hiển thị hình ảnh từ framebuffer lên cửa sổ
         int textureId = Window.getFramebuffer().getTextureId();
         ImGui.image(textureId, windowSize.x, windowSize.y, 0, 1, 1, 0);
         windowIsHovered = ImGui.isItemHovered();
 
         MouseListener.setGameViewportPos(new Vector2f(topLeft.x, topLeft.y));
         MouseListener.setGameViewportSize(new Vector2f(windowSize.x, windowSize.y));
+
+        // Lấy số coin từ CoinCounter và vẽ lên góc của cửa sổ viewport
+        ImGui.setNextWindowPos(topLeft.x + 10, topLeft.y + 10, ImGuiCond.Always);
+        ImGui.begin("Coin Counter", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize
+                | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoBackground);
+        ImGui.textColored(ImGui.getColorU32(0, 0, 0, 1), "Point: " + CoinCounter.getInstance().getCoinCount() * 100);
+        ImGui.end();
 
         ImGui.end();
     }
