@@ -72,7 +72,7 @@ public class PlayerController extends Component {
 
 
     private boolean isPlayerFallingIntoVoid(float playerY) {
-        float voidThreshold = -4f;
+        float voidThreshold = -0.5f;
         isFallingIntoVoid = playerY < voidThreshold;
         return isFallingIntoVoid;
     }
@@ -367,6 +367,8 @@ public class PlayerController extends Component {
             if (gameObject.transform.position.y > 0) {
                 deadMinHeight = -0.25f;
             }
+            isFallingIntoVoid = false; // Đặt lại cờ
+            scheduleRespawn(); // Lên lịch hẹn giờ cho việc hồi sinh
         } else if (this.playerState == PlayerState.Big) {
             this.playerState = PlayerState.Small;
             gameObject.transform.scale.y = 0.25f;
