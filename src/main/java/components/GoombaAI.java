@@ -32,10 +32,13 @@ public class GoombaAI extends Component {
     @Override
     public void update(float dt) {
         Camera camera = Window.getScene().camera();
-        if (this.gameObject.transform.position.x >
-                camera.position.x + camera.getProjectionSize().x * camera.getZoom()) {
-            return;
+        if (this.gameObject.transform.position.x > camera.position.x + camera.getProjectionSize().x * camera.getZoom()) {
+            // Đặt lại vị trí của Goomba về phía bên trái của tầm nhìn của camera
+            this.gameObject.transform.position.x = camera.position.x - camera.getProjectionSize().x * camera.getZoom();
+            // Thay đổi hướng của Goomba
+            goingRight = true;
         }
+
 
         if (isDead) {
             timeToKill -= dt;
@@ -63,9 +66,6 @@ public class GoombaAI extends Component {
         this.velocity.y += this.acceleration.y * dt;
         this.velocity.y = Math.max(Math.min(this.velocity.y, this.terminalVelocity.y), -terminalVelocity.y);
         this.rb.setVelocity(velocity);
-        if (this.gameObject.transform.position.x < Window.getScene().camera().position.x - 0.5f) {
-            this.gameObject.destroy();
-        }
     }
 
     public void checkOnGround() {
