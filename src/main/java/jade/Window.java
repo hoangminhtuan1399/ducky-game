@@ -275,11 +275,11 @@ public class Window implements Observer {
 
     @Override
     public void onNotify(GameObject object, Event event) {
-        currentScene.save();
         System.out.println(event.type);
         switch (event.type) {
             case GameMenuStart:
                 this.runtimePlaying = true;
+                currentScene.save();
                 Window.changeScene(new GameMenuSceneInitializer());
                 break;
             case GameMenuEnd:
@@ -288,6 +288,7 @@ public class Window implements Observer {
                 break;
             case GameEngineStartPlay:
                 this.runtimePlaying = true;
+                currentScene.save();
                 Window.changeScene(new LevelSceneInitializer());
                 break;
             case GameEngineStopPlay:

@@ -3,6 +3,8 @@ package scenes;
 import components.*;
 import imgui.ImGui;
 import imgui.ImVec2;
+import imgui.flag.ImGuiCond;
+import imgui.flag.ImGuiWindowFlags;
 import jade.*;
 import org.joml.Vector2f;
 import physics2d.components.Box2DCollider;

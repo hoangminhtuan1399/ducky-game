@@ -11,6 +11,7 @@ import observers.EventSystem;
 import observers.events.Event;
 import observers.events.EventType;
 import org.joml.Vector2f;
+import scenes.LevelSceneInitializer;
 
 public class GameViewWindow {
     private enum state {
@@ -79,12 +80,14 @@ public class GameViewWindow {
         MouseListener.setGameViewportPos(new Vector2f(topLeft.x, topLeft.y));
         MouseListener.setGameViewportSize(new Vector2f(windowSize.x, windowSize.y));
 
-        // Lấy số coin từ CoinCounter và vẽ lên góc của cửa sổ viewport
-        ImGui.setNextWindowPos(topLeft.x + 10, topLeft.y + 10, ImGuiCond.Always);
-        ImGui.begin("Coin Counter", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize
-                | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoBackground);
-        ImGui.textColored(ImGui.getColorU32(0, 0, 0, 1), "Point: " + CoinCounter.getInstance().getCoinCount() * 100);
-        ImGui.end();
+        if (Window.getScene().getSceneInitializer() instanceof LevelSceneInitializer) {
+            // Lấy số coin từ CoinCounter và vẽ lên góc của cửa sổ viewport
+            ImGui.setNextWindowPos(topLeft.x + 10, topLeft.y + 10, ImGuiCond.Always);
+            ImGui.begin("Coin Counter", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize
+                    | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoBackground);
+            ImGui.textColored(ImGui.getColorU32(0, 0, 0, 1), "Point: " + CoinCounter.getInstance().getCoinCount() * 100);
+            ImGui.end();
+        }
 
         ImGui.end();
     }

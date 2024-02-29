@@ -17,8 +17,6 @@ public class CoinCounter {
 
     public void incrementCoinCount() {
         coinCount++;
-      
-
     }
 
     public int getCoinCount() {

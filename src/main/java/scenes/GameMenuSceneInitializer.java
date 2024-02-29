@@ -1,10 +1,10 @@
 package scenes;
 
-import components.GameCamera;
-import components.SpriteRenderer;
-import components.Spritesheet;
-import components.StateMachine;
+import components.*;
+import imgui.ImGui;
+import imgui.ImVec2;
 import jade.GameObject;
+import org.joml.Vector2f;
 import util.AssetPool;
 
 public class GameMenuSceneInitializer extends SceneInitializer {
@@ -17,7 +17,11 @@ public class GameMenuSceneInitializer extends SceneInitializer {
         GameObject cameraObject = scene.createGameObject("MenuCamera");
         cameraObject.addComponent(new GameCamera(scene.camera()));
         cameraObject.start();
+        GameObject menuController = scene.createGameObject("MenuController");
+        menuController.addComponent(new MenuController());
+        menuController.start();
         scene.addGameObjectToScene(cameraObject);
+        scene.addGameObjectToScene(menuController);
     }
 
     @Override
@@ -67,6 +71,8 @@ public class GameMenuSceneInitializer extends SceneInitializer {
 
     @Override
     public void imgui() {
-
+        ImVec2 topLeft = new ImVec2();
+        ImGui.getCursorScreenPos(topLeft);
+        System.out.println(topLeft);
     }
 }
