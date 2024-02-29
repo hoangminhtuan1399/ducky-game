@@ -180,7 +180,15 @@ public class Scene {
                 .create();
 
         try {
-            FileWriter writer = new FileWriter("level.txt");
+            String fileName = "";
+            if (this.sceneInitializer instanceof LevelEditorSceneInitializer) {
+                fileName = "level.txt";
+            }
+            if (this.sceneInitializer instanceof GameMenuSceneEditorInitializer) {
+                fileName = "menu.txt";
+            }
+            if (fileName.isEmpty()) return;
+            FileWriter writer = new FileWriter(fileName);
             List<GameObject> objsToSerialize = new ArrayList<>();
             for (GameObject obj : this.gameObjects) {
                 if (obj.doSerialization()) {
@@ -204,7 +212,12 @@ public class Scene {
 
         String inFile = "";
         try {
-            inFile = new String(Files.readAllBytes(Paths.get("level.txt")));
+            if (this.sceneInitializer instanceof LevelEditorSceneInitializer) {
+                inFile = new String(Files.readAllBytes(Paths.get("level.txt")));
+            }
+            if (this.sceneInitializer instanceof GameMenuSceneEditorInitializer) {
+                inFile = new String(Files.readAllBytes(Paths.get("menu.txt")));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

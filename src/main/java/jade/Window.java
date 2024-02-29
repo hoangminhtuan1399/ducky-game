@@ -13,10 +13,7 @@ import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.opengl.GL;
 import physics2d.Physics2D;
 import renderer.*;
-import scenes.LevelEditorSceneInitializer;
-import scenes.LevelSceneInitializer;
-import scenes.Scene;
-import scenes.SceneInitializer;
+import scenes.*;
 import util.AssetPool;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -47,8 +44,8 @@ public class Window implements Observer {
     public static final boolean RELEASE_BUILD = false;
 
     private Window() {
-        this.width = 1920;
-        this.height = 1080;
+        this.width = 1360;
+        this.height = 768;
         this.title = "Jade";
         EventSystem.addObserver(this);
     }
@@ -165,9 +162,9 @@ public class Window implements Observer {
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-        this.framebuffer = new Framebuffer(1920, 1080);
-        this.pickingTexture = new PickingTexture(1920, 1080);
-        glViewport(0, 0, 1920, 1080);
+        this.framebuffer = new Framebuffer(1360, 768);
+        this.pickingTexture = new PickingTexture(1360, 768);
+        glViewport(0, 0, 1360, 768);
         // NOTE: If we're building for release, we want to skip any imgui things
         if (RELEASE_BUILD) {
             runtimePlaying = true;
@@ -175,7 +172,7 @@ public class Window implements Observer {
         } else {
             this.imguiLayer = new ImGuiLayer(glfwWindow, pickingTexture);
             this.imguiLayer.initImGui();
-            Window.changeScene(new LevelEditorSceneInitializer());
+            Window.changeScene(new GameMenuSceneEditorInitializer());
         }
     }
 
@@ -195,7 +192,7 @@ public class Window implements Observer {
             glDisable(GL_BLEND);
             pickingTexture.enableWriting();
 
-            glViewport(0, 0, 1920, 1080);
+            glViewport(0, 0, 1360, 768);
             glClearColor(0, 0, 0, 0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -249,11 +246,11 @@ public class Window implements Observer {
     }
 
     public static int getWidth() {
-        return 1920;//get().width;
+        return 1360;//get().width;
     }
 
     public static int getHeight() {
-        return 1080;//get().height;
+        return 768;//get().height;
     }
 
     public static void setWidth(int newWidth) {
@@ -278,10 +275,19 @@ public class Window implements Observer {
 
     @Override
     public void onNotify(GameObject object, Event event) {
+        currentScene.save();
+        System.out.println(event.type);
         switch (event.type) {
+            case GameMenuStart:
+                this.runtimePlaying = true;
+                Window.changeScene(new GameMenuSceneInitializer());
+                break;
+            case GameMenuEnd:
+                this.runtimePlaying = false;
+                Window.changeScene(new GameMenuSceneEditorInitializer());
+                break;
             case GameEngineStartPlay:
                 this.runtimePlaying = true;
-                currentScene.save();
                 Window.changeScene(new LevelSceneInitializer());
                 break;
             case GameEngineStopPlay:

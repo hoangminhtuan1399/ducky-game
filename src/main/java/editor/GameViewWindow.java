@@ -13,8 +13,22 @@ import observers.events.EventType;
 import org.joml.Vector2f;
 
 public class GameViewWindow {
+    private enum state {
+        GameEditor,
+        MenuEditor,
+        Play
+    }
     private float leftX, rightX, topY, bottomY;
+    private String currentState = "GameStop";
+    private boolean isEditingLevel = false;
+    private boolean isEditingMenu = true;
     private boolean isPlaying = false;
+    private void updateState() {
+        isEditingLevel = currentState.equalsIgnoreCase(state.GameEditor.name());
+        isEditingMenu = currentState.equalsIgnoreCase(state.MenuEditor.name());
+        isPlaying = currentState.equalsIgnoreCase(state.Play.name());
+    }
+
     private boolean windowIsHovered;
 
     public void imgui() {
@@ -22,13 +36,20 @@ public class GameViewWindow {
                 | ImGuiWindowFlags.MenuBar);
 
         ImGui.beginMenuBar();
-        if (ImGui.menuItem("Play", "", isPlaying, !isPlaying)) {
-            isPlaying = true;
-            EventSystem.notify(null, new Event(EventType.GameEngineStartPlay));
+        if (ImGui.menuItem("Edit menu", "", isEditingMenu, !isEditingMenu)) {
+            currentState = "MenuEditor";
+            updateState();
+            EventSystem.notify(null, new Event(EventType.GameMenuEnd));
         }
-        if (ImGui.menuItem("Stop", "", !isPlaying, isPlaying)) {
-            isPlaying = false;
+        if (ImGui.menuItem("Edit level", "", isEditingLevel, !isEditingLevel)) {
+            currentState = "GameEditor";
+            updateState();
             EventSystem.notify(null, new Event(EventType.GameEngineStopPlay));
+        }
+        if (ImGui.menuItem("Play", "", isPlaying, !isPlaying)) {
+            currentState = "Play";
+            updateState();
+            EventSystem.notify(null, new Event(EventType.GameMenuStart));
             // Thiết lập coinCount về 0
             CoinCounter.getInstance().setCoinCount(0);
         }
