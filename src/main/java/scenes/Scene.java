@@ -52,7 +52,7 @@ public class Scene {
     }
 
     public void start() {
-        for (int i=0; i < gameObjects.size(); i++) {
+        for (int i = 0; i < gameObjects.size(); i++) {
             GameObject go = gameObjects.get(i);
             go.start();
             this.renderer.add(go);
@@ -99,7 +99,7 @@ public class Scene {
     public void editorUpdate(float dt) {
         this.camera.adjustProjection();
 
-        for (int i=0; i < gameObjects.size(); i++) {
+        for (int i = 0; i < gameObjects.size(); i++) {
             GameObject go = gameObjects.get(i);
             go.editorUpdate(dt);
 
@@ -131,7 +131,7 @@ public class Scene {
         this.camera.adjustProjection();
         this.physics2D.update(dt);
 
-        for (int i=0; i < gameObjects.size(); i++) {
+        for (int i = 0; i < gameObjects.size(); i++) {
             GameObject go = gameObjects.get(i);
             go.update(dt);
 
@@ -180,7 +180,16 @@ public class Scene {
                 .create();
 
         try {
-            FileWriter writer = new FileWriter("level.txt");
+            String fileName = "";
+            if (this.sceneInitializer instanceof LevelEditorSceneInitializer) {
+                fileName = "level.txt";
+            }
+            if (this.sceneInitializer instanceof GameMenuSceneEditorInitializer) {
+                fileName = "menu.txt";
+            }
+//            System.out.println("save file: " + fileName);
+            if (fileName.isEmpty()) return;
+            FileWriter writer = new FileWriter(fileName);
             List<GameObject> objsToSerialize = new ArrayList<>();
             for (GameObject obj : this.gameObjects) {
                 if (obj.doSerialization()) {
@@ -189,7 +198,7 @@ public class Scene {
             }
             writer.write(gson.toJson(objsToSerialize));
             writer.close();
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -204,7 +213,13 @@ public class Scene {
 
         String inFile = "";
         try {
-            inFile = new String(Files.readAllBytes(Paths.get("level.txt")));
+            if (this.sceneInitializer instanceof LevelEditorSceneInitializer || this.sceneInitializer instanceof LevelSceneInitializer) {
+                inFile = new String(Files.readAllBytes(Paths.get("level.txt")));
+            }
+            if (this.sceneInitializer instanceof GameMenuSceneEditorInitializer || this.sceneInitializer instanceof GameMenuSceneInitializer) {
+                inFile = new String(Files.readAllBytes(Paths.get("menu.txt")));
+            }
+//            System.out.println("load file: " + inFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -213,7 +228,7 @@ public class Scene {
             int maxGoId = -1;
             int maxCompId = -1;
             GameObject[] objs = gson.fromJson(inFile, GameObject[].class);
-            for (int i=0; i < objs.length; i++) {
+            for (int i = 0; i < objs.length; i++) {
                 addGameObjectToScene(objs[i]);
 
                 for (Component c : objs[i].getAllComponents()) {
@@ -231,5 +246,9 @@ public class Scene {
             GameObject.init(maxGoId);
             Component.init(maxCompId);
         }
+    }
+
+    public SceneInitializer getSceneInitializer() {
+        return this.sceneInitializer;
     }
 }

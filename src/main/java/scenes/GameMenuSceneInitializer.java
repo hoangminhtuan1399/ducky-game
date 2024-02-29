@@ -3,31 +3,25 @@ package scenes;
 import components.*;
 import imgui.ImGui;
 import imgui.ImVec2;
-import imgui.flag.ImGuiCond;
-import imgui.flag.ImGuiWindowFlags;
-import jade.*;
+import jade.GameObject;
 import org.joml.Vector2f;
-import physics2d.components.Box2DCollider;
-import physics2d.components.Rigidbody2D;
-import physics2d.enums.BodyType;
 import util.AssetPool;
 
-import java.io.File;
-import java.util.Collection;
-
-public class LevelSceneInitializer extends SceneInitializer {
-    public LevelSceneInitializer() {
+public class GameMenuSceneInitializer extends SceneInitializer {
+    public GameMenuSceneInitializer() {
 
     }
-
     @Override
     public void init(Scene scene) {
         Spritesheet sprites = AssetPool.getSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png");
-
-        GameObject cameraObject = scene.createGameObject("GameCamera");
+        GameObject cameraObject = scene.createGameObject("MenuCamera");
         cameraObject.addComponent(new GameCamera(scene.camera()));
         cameraObject.start();
+        GameObject menuController = scene.createGameObject("MenuController");
+        menuController.addComponent(new MenuController());
+        menuController.start();
         scene.addGameObjectToScene(cameraObject);
+        scene.addGameObjectToScene(menuController);
     }
 
     @Override
@@ -58,21 +52,6 @@ public class LevelSceneInitializer extends SceneInitializer {
         AssetPool.getTexture("assets/images/blendImage2.png");
 
         AssetPool.addSound("assets/sounds/main-theme-overworld.ogg", true);
-        AssetPool.addSound("assets/sounds/flagpole.ogg", false);
-        AssetPool.addSound("assets/sounds/break_block.ogg", false);
-        AssetPool.addSound("assets/sounds/bump.ogg", false);
-        AssetPool.addSound("assets/sounds/coin.ogg", false);
-        AssetPool.addSound("assets/sounds/gameover.ogg", false);
-        AssetPool.addSound("assets/sounds/jump-small.ogg", false);
-        AssetPool.addSound("assets/sounds/mario_die.ogg", false);
-        AssetPool.addSound("assets/sounds/pipe.ogg", false);
-        AssetPool.addSound("assets/sounds/powerup.ogg", false);
-        AssetPool.addSound("assets/sounds/powerup_appears.ogg", false);
-        AssetPool.addSound("assets/sounds/stage_clear.ogg", false);
-        AssetPool.addSound("assets/sounds/stomp.ogg", false);
-        AssetPool.addSound("assets/sounds/kick.ogg", false);
-        AssetPool.addSound("assets/sounds/invincible.ogg", false);
-
         AssetPool.getSound(("assets/sounds/main-theme-overworld.ogg")).play();
 
         for (GameObject g : scene.getGameObjects()) {
@@ -92,6 +71,8 @@ public class LevelSceneInitializer extends SceneInitializer {
 
     @Override
     public void imgui() {
-
+        ImVec2 topLeft = new ImVec2();
+        ImGui.getCursorScreenPos(topLeft);
+        System.out.println(topLeft);
     }
 }
