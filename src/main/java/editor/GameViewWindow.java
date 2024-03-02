@@ -11,6 +11,7 @@ import observers.EventSystem;
 import observers.events.Event;
 import observers.events.EventType;
 import org.joml.Vector2f;
+import scenes.GameMenuSceneInitializer;
 import scenes.LevelSceneInitializer;
 
 public class GameViewWindow {
@@ -79,6 +80,15 @@ public class GameViewWindow {
 
         MouseListener.setGameViewportPos(new Vector2f(topLeft.x, topLeft.y));
         MouseListener.setGameViewportSize(new Vector2f(windowSize.x, windowSize.y));
+
+        if (Window.getScene().getSceneInitializer() instanceof GameMenuSceneInitializer) {
+
+            ImGui.setNextWindowPos(topLeft.x + (windowSize.x / 2) - 50, topLeft.y + (windowSize.y / 2) + 20, ImGuiCond.Always);
+            ImGui.begin("Play Game", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize
+                    | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoBackground);
+            ImGui.text("Press Enter");
+            ImGui.end();
+        }
 
         if (Window.getScene().getSceneInitializer() instanceof LevelSceneInitializer) {
             // Lấy số coin từ CoinCounter và vẽ lên góc của cửa sổ viewport
