@@ -356,7 +356,9 @@ public class PlayerController extends Component {
 
             // Thiết lập coinCount về 0
             CoinCounter.getInstance().setCoinCount(0);
-
+            //thời gian chết lâu hơn
+            scheduleRespawn();
+            
             this.rb.setVelocity(new Vector2f());
             this.isDead = true;
             this.rb.setIsSensor();
