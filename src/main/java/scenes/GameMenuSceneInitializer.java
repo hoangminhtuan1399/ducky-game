@@ -74,5 +74,6 @@ public class GameMenuSceneInitializer extends SceneInitializer {
         ImVec2 topLeft = new ImVec2();
         ImGui.getCursorScreenPos(topLeft);
         System.out.println(topLeft);
+
     }
 }

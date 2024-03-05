@@ -41,7 +41,7 @@ public class Window implements Observer {
 
     // NOTE: Turn this to false if you want to include the editor in the game
     //       true means it will just ship the game without the editor and ImGui stuff
-    public static final boolean RELEASE_BUILD = false;
+    public static final boolean RELEASE_BUILD = true;
 
     private Window() {
         this.width = 1920;
@@ -168,7 +168,7 @@ public class Window implements Observer {
         // NOTE: If we're building for release, we want to skip any imgui things
         if (RELEASE_BUILD) {
             runtimePlaying = true;
-            Window.changeScene(new LevelSceneInitializer());
+            Window.changeScene(new GameMenuSceneInitializer());
         } else {
             this.imguiLayer = new ImGuiLayer(glfwWindow, pickingTexture);
             this.imguiLayer.initImGui();
