@@ -2,16 +2,12 @@ package mongodb.mongoDbConnect;
 
 import com.mongodb.*;
 import com.mongodb.MongoClient;
-import com.mongodb.client.*;
-
 import com.mongodb.MongoClientURI;
+import com.mongodb.client.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import mongodb.mongoDbConfig.MongoDbConfig;
-import org.bson.BsonDocument;
-import org.bson.BsonInt64;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 
 
 public class MongoDbConnect implements MongoDbConfig {
